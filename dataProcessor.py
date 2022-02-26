@@ -86,20 +86,3 @@ def load_data():
     targets_values = targets_pd.values
 
     return title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data, movies_orig, users_orig
-
-
-def saveData(title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data, movies_orig,
-             users_orig):
-    with open('./processed_data/preprocess.pkl', 'wb') as f:
-        pickle.dump((title_count,
-                     title_set,
-                     genres2int,
-                     features,
-                     targets_values,
-                     ratings,
-                     users,
-                     movies,
-                     data,
-                     movies_orig,
-                     users_orig),
-                    f)

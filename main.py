@@ -1,3 +1,4 @@
+import pickle
 from Helper.getRawData import download_extract
 from Helper.helper import saveProcessedData, save_params, load_params
 from pathlib import Path
@@ -5,6 +6,9 @@ from Helper.dataProcessor import load_data
 from model.rating import rating_movie
 from model.train import train
 import config as cg
+from saveFeature import saveUserFeature, saveMovieFeature
+
+
 if __name__ == '__main__':
 
     # 下载数据
@@ -24,5 +28,10 @@ if __name__ == '__main__':
         losses = train()
         save_params(cg.save_dir)
         load_dir = load_params()
-    print(rating_movie(234, 1401))
+    if not Path("./movie_matrics.p").exists():
+        saveMovieFeature()
+        movie_matrics = pickle.load(open('movie_matrics.p', mode='rb'))
+    if not Path("./users_matrics.p").exists():
+        saveUserFeature()
+        users_matrics = pickle.load(open('users_matrics.p', mode='rb'))
     print('end')

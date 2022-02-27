@@ -86,3 +86,5 @@ def load_data():
     targets_values = targets_pd.values
 
     return title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data, movies_orig, users_orig
+
+

@@ -1,5 +1,4 @@
 import pickle
-
 with open('./processed_data/preprocess.pkl', mode='rb') as f:
     title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data, \
     movies_orig, users_orig = pickle.load(f)

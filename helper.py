@@ -77,6 +77,24 @@ def get_inputs():
     targets = tf.placeholder(tf.int32, [None, 1], name="targets")
     LearningRate = tf.placeholder(tf.float32, name="LearningRate")
     dropout_keep_prob = tf.placeholder(tf.float32, name="dropout_keep_prob")
-    return uid, user_gender, user_age, user_job, \
-           movie_id, movie_categories, movie_titles, targets, \
-           LearningRate, dropout_keep_prob
+    return uid, user_gender, user_age, user_job, movie_id, movie_categories, movie_titles, targets, LearningRate, dropout_keep_prob
+
+
+def get_tensors(loaded_graph):
+    uid = loaded_graph.get_tensor_by_name("uid:0")
+    user_gender = loaded_graph.get_tensor_by_name("user_gender:0")
+    user_age = loaded_graph.get_tensor_by_name("user_age:0")
+    user_job = loaded_graph.get_tensor_by_name("user_job:0")
+    movie_id = loaded_graph.get_tensor_by_name("movie_id:0")
+    movie_categories = loaded_graph.get_tensor_by_name("movie_categories:0")
+    movie_titles = loaded_graph.get_tensor_by_name("movie_titles:0")
+    targets = loaded_graph.get_tensor_by_name("targets:0")
+    dropout_keep_prob = loaded_graph.get_tensor_by_name("dropout_keep_prob:0")
+    lr = loaded_graph.get_tensor_by_name("LearningRate:0")
+    # 两种不同计算预测评分的方案使用不同的name获取tensor inference
+    # inference = loaded_graph.get_tensor_by_name("inference/inference/BiasAdd:0")
+    inference = loaded_graph.get_tensor_by_name(
+        "inference/ExpandDims:0")  # 之前是MatMul:0 因为inference代码修改了 这里也要修改 感谢网友 @清歌 指出问题
+    movie_combine_layer_flat = loaded_graph.get_tensor_by_name("movie_fc/Reshape:0")
+    user_combine_layer_flat = loaded_graph.get_tensor_by_name("user_fc/Reshape:0")
+    return uid, user_gender, user_age, user_job, movie_id, movie_categories, movie_titles, targets, lr, dropout_keep_prob, inference, movie_combine_layer_flat, user_combine_layer_flat

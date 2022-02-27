@@ -1,6 +1,7 @@
 import tensorflow.compat.v1 as tf
 from config import *
-from helper import get_inputs
+
+
 # 从上面的网络架构图中，我们可以看出，其实用户的特征总数量是 128
 # 但是作者在下面的代码中并没有这样做，而是由的特征设置为了 16，这样可能是因为作者的电脑性能比较差
 # 我们先尝试这样的设置，如果计算资源允许，我们在后面再次测试的时候全部设置为 32

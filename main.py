@@ -1,7 +1,7 @@
-from getRawData import download_extract
-from helper import saveProcessedData, save_params, load_params
+from Helper.getRawData import download_extract
+from Helper.helper import saveProcessedData, save_params, load_params
 from pathlib import Path
-from dataProcessor import load_data
+from Helper.dataProcessor import load_data
 from model.rating import rating_movie
 from model.train import train
 import config as cg

@@ -8,18 +8,18 @@ from config import *
 def seeRawData():
     print("\n------------ users -------------")
     users_title = ['UserID', 'Gender', 'Age', 'OccupationID', 'Zip-code']
-    users = pd.read_table('./ml-1m/users.dat', sep='::', header=None, names=users_title, engine='python')
+    users = pd.read_table('../ml-1m/users.dat', sep='::', header=None, names=users_title, engine='python')
     print(users.head())
 
     print("\n------------ movies -------------")
     movies_title = ['MovieID', 'Title', 'Genres']
-    movies = pd.read_table('./ml-1m/movies.dat', sep='::', header=None, names=movies_title, engine='python',
+    movies = pd.read_table('../ml-1m/movies.dat', sep='::', header=None, names=movies_title, engine='python',
                            encoding="ISO-8859-1")
     print(movies.head())
 
     print("\n------------ ratings -------------")
     ratings_title = ['UserID', 'MovieID', 'Rating', 'timestamps']
-    ratings = pd.read_table('./ml-1m/ratings.dat', sep='::', header=None, names=ratings_title, engine='python')
+    ratings = pd.read_table('../ml-1m/ratings.dat', sep='::', header=None, names=ratings_title, engine='python')
     print(ratings.head())
 
 
@@ -27,7 +27,7 @@ def save_params(params):
     """
     Save parameters to file
     """
-    with open('params.p', 'wb') as f:
+    with open('../params.p', 'wb') as f:
         pickle.dump(params, f)
 
 
@@ -35,13 +35,13 @@ def load_params():
     """
     Load parameters from file
     """
-    with open('params.p', mode='rb') as f:
+    with open('../params.p', mode='rb') as f:
         return pickle.load(f)
 
 
 def saveProcessedData(title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data,
                       movies_orig, users_orig):
-    with open('./processed_data/preprocess.pkl', 'wb') as f:
+    with open('../processed_data/preprocess.pkl', 'wb') as f:
         pickle.dump((title_count,
                      title_set,
                      genres2int,
@@ -57,7 +57,7 @@ def saveProcessedData(title_count, title_set, genres2int, features, targets_valu
 
 
 def getProcessedData():
-    with open('./processed_data/preprocess.pkl', mode='rb') as f:
+    with open('../processed_data/preprocess.pkl', mode='rb') as f:
         title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data, \
         movies_orig, users_orig = pickle.load(f)
     return title_count, title_set, genres2int, features, targets_values, ratings, users, movies, data, \

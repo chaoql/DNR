@@ -1,9 +1,9 @@
 import tensorflow.compat.v1 as tf
 import numpy as np
-from dataProcessor import load_data
+from Helper.dataProcessor import load_data
 import config as cg
-from helper import get_tensors
-from helper import load_params
+from Helper.helper import get_tensors
+from Helper.helper import load_params
 
 
 def rating_movie(user_id_val, movie_id_val, load_dir=load_params()):

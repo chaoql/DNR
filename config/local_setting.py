@@ -3,7 +3,7 @@
 """
 数据库链接
 """
-SQLALCHEMY_DATABASE_URI = 'mysql://root:cql666@localhost:3306/movie_cat'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:cql666@localhost:3306/news_recommendation_system'
 
 '''
 相对地址转化为绝对地址

@@ -30,7 +30,7 @@ def recommend_same_type_movie(movie_id_val, top_k=20):
     :param top_k:
     :return:
     """
-    movie_matrics = pickle.load(open('movie_matrics.p', mode='rb'))
+    movie_matrics = pickle.load(open('./save/movie_matrics.p', mode='rb'))
     load_dir = load_params()
     loaded_graph = tf.Graph()  #
     with tf.Session(graph=loaded_graph) as sess:  #
@@ -59,8 +59,8 @@ def recommend_your_favorite_movie(user_id_val, top_k=10):
     :param top_k:
     :return:
     """
-    movie_matrics = pickle.load(open('movie_matrics.p', mode='rb'))
-    users_matrics = pickle.load(open('users_matrics.p', mode='rb'))
+    movie_matrics = pickle.load(open('./save/movie_matrics.p', mode='rb'))
+    users_matrics = pickle.load(open('./save/users_matrics.p', mode='rb'))
     load_dir = load_params()
     loaded_graph = tf.Graph()  #
     with tf.Session(graph=loaded_graph) as sess:  #
@@ -86,8 +86,8 @@ def recommend_other_favorite_movie(movie_id_val, top_k=20):
     :param top_k:
     :return:
     """
-    movie_matrics = pickle.load(open('movie_matrics.p', mode='rb'))
-    users_matrics = pickle.load(open('users_matrics.p', mode='rb'))
+    movie_matrics = pickle.load(open('./save/movie_matrics.p', mode='rb'))
+    users_matrics = pickle.load(open('./save/users_matrics.p', mode='rb'))
     load_dir = load_params()
     loaded_graph = tf.Graph()  #
     with tf.Session(graph=loaded_graph) as sess:  #

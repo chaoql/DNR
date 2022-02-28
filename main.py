@@ -28,12 +28,10 @@ if __name__ == '__main__':
         losses = train()
         save_params(cg.save_dir)
         load_dir = load_params()
-    if not Path("./movie_matrics.p").exists():
+    if not Path("./save/movie_matrics.p").exists():
         saveMovieFeature()
-    if not Path("./users_matrics.p").exists():
+    if not Path("./save/users_matrics.p").exists():
         saveUserFeature()
-    movie_matrics = pickle.load(open('movie_matrics.p', mode='rb'))
-    users_matrics = pickle.load(open('users_matrics.p', mode='rb'))
     print(recommend_same_type_movie(1401, 20))
     print(recommend_your_favorite_movie(234, 10))
     print(recommend_other_favorite_movie(1401, 20))

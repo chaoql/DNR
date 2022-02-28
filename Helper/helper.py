@@ -27,7 +27,7 @@ def save_params(params):
     """
     Save parameters to file
     """
-    with open('./params.p', 'wb') as f:
+    with open('./save/params.p', 'wb') as f:
         pickle.dump(params, f)
 
 
@@ -35,7 +35,7 @@ def load_params():
     """
     Load parameters from file
     """
-    with open('./params.p', mode='rb') as f:
+    with open('./save/params.p', mode='rb') as f:
         return pickle.load(f)
 
 

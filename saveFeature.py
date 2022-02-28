@@ -34,7 +34,7 @@ def saveMovieFeature():
             movie_combine_layer_flat_val = sess.run([movie_combine_layer_flat], feed)
             movie_matrics.append(movie_combine_layer_flat_val)
 
-    pickle.dump((np.array(movie_matrics).reshape(-1, 200)), open('movie_matrics.p', 'wb'))
+    pickle.dump((np.array(movie_matrics).reshape(-1, 200)), open('./save/movie_matrics.p', 'wb'))
 
 
 def saveUserFeature():
@@ -61,4 +61,4 @@ def saveUserFeature():
             user_combine_layer_flat_val = sess.run([user_combine_layer_flat], feed)
             users_matrics.append(user_combine_layer_flat_val)
 
-    pickle.dump((np.array(users_matrics).reshape(-1, 200)), open('users_matrics.p', 'wb'))
+    pickle.dump((np.array(users_matrics).reshape(-1, 200)), open('./save/users_matrics.p', 'wb'))

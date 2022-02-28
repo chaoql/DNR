@@ -1,14 +1,11 @@
 import shutil
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 import numpy as np
 from collections import Counter
 import tensorflow as tf
-
 import os
 from tensorflow.python.ops import math_ops
-
 from urllib.request import urlretrieve
 from os.path import isfile, isdir
 from tqdm import tqdm

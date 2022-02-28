@@ -1,7 +1,7 @@
 import tensorflow.compat.v1 as tf
 import numpy as np
 from Helper.dataProcessor import load_data
-import var as cg
+import var
 from Helper.helper import get_tensors
 from Helper.helper import load_params
 
@@ -20,17 +20,17 @@ def rating_movie(user_id_val, movie_id_val, load_dir=load_params()):
             loaded_graph)  # loaded_graph
 
         categories = np.zeros([1, 18])
-        categories[0] = movies.values[cg.movieid2idx[movie_id_val]][2]
+        categories[0] = movies.values[var.movieid2idx[movie_id_val]][2]
 
-        titles = np.zeros([1, cg.sentences_size])
-        titles[0] = movies.values[cg.movieid2idx[movie_id_val]][1]
+        titles = np.zeros([1, var.sentences_size])
+        titles[0] = movies.values[var.movieid2idx[movie_id_val]][1]
 
         feed = {
             uid: np.reshape(users.values[user_id_val - 1][0], [1, 1]),
             user_gender: np.reshape(users.values[user_id_val - 1][1], [1, 1]),
             user_age: np.reshape(users.values[user_id_val - 1][2], [1, 1]),
             user_job: np.reshape(users.values[user_id_val - 1][3], [1, 1]),
-            movie_id: np.reshape(movies.values[cg.movieid2idx[movie_id_val]][0], [1, 1]),
+            movie_id: np.reshape(movies.values[var.movieid2idx[movie_id_val]][0], [1, 1]),
             movie_categories: categories,  # x.take(6,1)
             movie_titles: titles,  # x.take(5,1)
             dropout_keep_prob: 1}

@@ -3,7 +3,7 @@ import random
 import tensorflow.compat.v1 as tf
 import numpy as np
 from Helper.helper import load_params
-import var as cg
+import var
 
 
 def recommend_print(sim, top_k, str="以下是给您的推荐："):
@@ -17,7 +17,7 @@ def recommend_print(sim, top_k, str="以下是给您的推荐："):
         results.add(c)
     for val in (results):
         print(val)
-        print(cg.movies_orig[val])
+        print(var.movies_orig[val])
 
     return results
 
@@ -42,13 +42,13 @@ def recommend_same_type_movie(movie_id_val, top_k=20):
         normalized_movie_matrics = movie_matrics / norm_movie_matrics
 
         # 推荐同类型的电影
-        probs_embeddings = (movie_matrics[cg.movieid2idx[movie_id_val]]).reshape([1, 200])
+        probs_embeddings = (movie_matrics[var.movieid2idx[movie_id_val]]).reshape([1, 200])
         probs_similarity = tf.matmul(probs_embeddings, tf.transpose(normalized_movie_matrics))
         sim = (probs_similarity.eval())
         #     results = (-sim[0]).argsort()[0:top_k]
         #     print(results)
 
-        print("您看的电影是：{}".format(cg.movies_orig[cg.movieid2idx[movie_id_val]]))
+        print("您看的电影是：{}".format(var.movies_orig[var.movieid2idx[movie_id_val]]))
         recommend_print(sim, top_k, "以下是给您的推荐：")
 
 
@@ -95,15 +95,15 @@ def recommend_other_favorite_movie(movie_id_val, top_k=20):
         loader = tf.train.import_meta_graph(load_dir + '.meta')
         loader.restore(sess, load_dir)
 
-        probs_movie_embeddings = (movie_matrics[cg.movieid2idx[movie_id_val]]).reshape([1, 200])
+        probs_movie_embeddings = (movie_matrics[var.movieid2idx[movie_id_val]]).reshape([1, 200])
         probs_user_favorite_similarity = tf.matmul(probs_movie_embeddings, tf.transpose(users_matrics))
         favorite_user_id = np.argsort(probs_user_favorite_similarity.eval())[0][-top_k:]
         #     print(normalized_users_matrics.eval().shape)
         #     print(probs_user_favorite_similarity.eval()[0][favorite_user_id])
         #     print(favorite_user_id.shape)
 
-        print("您看的电影是：{}".format(cg.movies_orig[cg.movieid2idx[movie_id_val]]))
-        print("喜欢看这个电影的人是：{}".format(cg.users_orig[favorite_user_id - 1]))
+        print("您看的电影是：{}".format(var.movies_orig[var.movieid2idx[movie_id_val]]))
+        print("喜欢看这个电影的人是：{}".format(var.users_orig[favorite_user_id - 1]))
         probs_users_embeddings = (users_matrics[favorite_user_id - 1]).reshape([-1, 200])
         probs_similarity = tf.matmul(probs_users_embeddings, tf.transpose(movie_matrics))
         sim = (probs_similarity.eval())
@@ -115,5 +115,5 @@ def recommend_other_favorite_movie(movie_id_val, top_k=20):
             results.add(c)
         for val in (results):
             print(val)
-            print(cg.movies_orig[val])
+            print(var.movies_orig[val])
         return results

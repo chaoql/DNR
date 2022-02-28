@@ -2,7 +2,7 @@ import os
 import pickle
 import pandas as pd
 import tensorflow.compat.v1 as tf
-from var import *
+import var
 
 
 def seeRawData():
@@ -62,7 +62,7 @@ def get_inputs():
 
     movie_id = tf.placeholder(tf.int32, [None, 1], name="movie_id")
     # 电影种类中要去除<PAD>，所以-1
-    movie_categories = tf.placeholder(tf.int32, [None, movie_categories_max - 1], name="movie_categories")
+    movie_categories = tf.placeholder(tf.int32, [None, var.movie_categories_max - 1], name="movie_categories")
     movie_titles = tf.placeholder(tf.int32, [None, 15], name="movie_titles")
     targets = tf.placeholder(tf.int32, [None, 1], name="targets")
     LearningRate = tf.placeholder(tf.float32, name="LearningRate")

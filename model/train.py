@@ -8,7 +8,7 @@ import time
 import datetime
 import os
 import tensorflow.compat.v1 as tf
-import var as cg
+import var
 
 
 tf.reset_default_graph()
@@ -115,7 +115,7 @@ def train():
 
         sess.run(tf.global_variables_initializer())
         saver = tf.train.Saver()
-        for epoch_i in range(cg.num_epochs):
+        for epoch_i in range(var.num_epochs):
 
             # 将数据集分成训练集和测试集，随机种子不固定
             train_X, test_X, train_y, test_y = train_test_split(features,
@@ -123,70 +123,70 @@ def train():
                                                                 test_size=0.2,
                                                                 random_state=0)
 
-            train_batches = get_batches(train_X, train_y, cg.batch_size)
-            test_batches = get_batches(test_X, test_y, cg.batch_size)
+            train_batches = get_batches(train_X, train_y, var.batch_size)
+            test_batches = get_batches(test_X, test_y, var.batch_size)
 
             # 训练的迭代，保存训练损失
-            for batch_i in range(len(train_X) // cg.batch_size):
+            for batch_i in range(len(train_X) // var.batch_size):
                 x, y = next(train_batches)
 
-                categories = np.zeros([cg.batch_size, 18])
-                for i in range(cg.batch_size):
+                categories = np.zeros([var.batch_size, 18])
+                for i in range(var.batch_size):
                     categories[i] = x.take(6, 1)[i]
 
-                titles = np.zeros([cg.batch_size, cg.sentences_size])
-                for i in range(cg.batch_size):
+                titles = np.zeros([var.batch_size, var.sentences_size])
+                for i in range(var.batch_size):
                     titles[i] = x.take(5, 1)[i]
 
                 feed = {
-                    uid: np.reshape(x.take(0, 1), [cg.batch_size, 1]),
-                    user_gender: np.reshape(x.take(2, 1), [cg.batch_size, 1]),
-                    user_age: np.reshape(x.take(3, 1), [cg.batch_size, 1]),
-                    user_job: np.reshape(x.take(4, 1), [cg.batch_size, 1]),
-                    movie_id: np.reshape(x.take(1, 1), [cg.batch_size, 1]),
+                    uid: np.reshape(x.take(0, 1), [var.batch_size, 1]),
+                    user_gender: np.reshape(x.take(2, 1), [var.batch_size, 1]),
+                    user_age: np.reshape(x.take(3, 1), [var.batch_size, 1]),
+                    user_job: np.reshape(x.take(4, 1), [var.batch_size, 1]),
+                    movie_id: np.reshape(x.take(1, 1), [var.batch_size, 1]),
                     movie_categories: categories,  # x.take(6,1)
                     movie_titles: titles,  # x.take(5,1)
-                    targets: np.reshape(y, [cg.batch_size, 1]),
-                    dropout_keep_prob: cg.dropout_keep,  # dropout_keep
-                    lr: cg.learning_rate}
+                    targets: np.reshape(y, [var.batch_size, 1]),
+                    dropout_keep_prob: var.dropout_keep,  # dropout_keep
+                    lr: var.learning_rate}
 
                 step, train_loss, summaries, _ = sess.run([global_step, loss, train_summary_op, train_op], feed)  # cost
                 losses['train'].append(train_loss)
                 train_summary_writer.add_summary(summaries, step)  #
 
                 # Show every <show_every_n_batches> batches
-                if batch_i % cg.show_every_n_batches == 0:
+                if batch_i % var.show_every_n_batches == 0:
                     time_str = datetime.datetime.now().isoformat()
                     print('{}: Epoch {:>3} Batch {:>4}/{}   train_loss = {:.3f}'.format(
                         time_str,
                         epoch_i,
                         batch_i,
-                        (len(train_X) // cg.batch_size),
+                        (len(train_X) // var.batch_size),
                         train_loss))
 
             # 使用测试数据的迭代
-            for batch_i in range(len(test_X) // cg.batch_size):
+            for batch_i in range(len(test_X) // var.batch_size):
                 x, y = next(test_batches)
 
-                categories = np.zeros([cg.batch_size, 18])
-                for i in range(cg.batch_size):
+                categories = np.zeros([var.batch_size, 18])
+                for i in range(var.batch_size):
                     categories[i] = x.take(6, 1)[i]
 
-                titles = np.zeros([cg.batch_size, cg.sentences_size])
-                for i in range(cg.batch_size):
+                titles = np.zeros([var.batch_size, var.sentences_size])
+                for i in range(var.batch_size):
                     titles[i] = x.take(5, 1)[i]
 
                 feed = {
-                    uid: np.reshape(x.take(0, 1), [cg.batch_size, 1]),
-                    user_gender: np.reshape(x.take(2, 1), [cg.batch_size, 1]),
-                    user_age: np.reshape(x.take(3, 1), [cg.batch_size, 1]),
-                    user_job: np.reshape(x.take(4, 1), [cg.batch_size, 1]),
-                    movie_id: np.reshape(x.take(1, 1), [cg.batch_size, 1]),
+                    uid: np.reshape(x.take(0, 1), [var.batch_size, 1]),
+                    user_gender: np.reshape(x.take(2, 1), [var.batch_size, 1]),
+                    user_age: np.reshape(x.take(3, 1), [var.batch_size, 1]),
+                    user_job: np.reshape(x.take(4, 1), [var.batch_size, 1]),
+                    movie_id: np.reshape(x.take(1, 1), [var.batch_size, 1]),
                     movie_categories: categories,  # x.take(6,1)
                     movie_titles: titles,  # x.take(5,1)
-                    targets: np.reshape(y, [cg.batch_size, 1]),
+                    targets: np.reshape(y, [var.batch_size, 1]),
                     dropout_keep_prob: 1,
-                    lr: cg.learning_rate}
+                    lr: var.learning_rate}
 
                 step, test_loss, summaries = sess.run([global_step, loss, inference_summary_op], feed)  # cost
 
@@ -195,15 +195,15 @@ def train():
                 inference_summary_writer.add_summary(summaries, step)  #
 
                 time_str = datetime.datetime.now().isoformat()
-                if batch_i % cg.show_every_n_batches == 0:
+                if batch_i % var.show_every_n_batches == 0:
                     print('{}: Epoch {:>3} Batch {:>4}/{}   test_loss = {:.3f}'.format(
                         time_str,
                         epoch_i,
                         batch_i,
-                        (len(test_X) // cg.batch_size),
+                        (len(test_X) // var.batch_size),
                         test_loss))
 
         # Save Model
-        saver.save(sess, cg.save_dir)  # , global_step=epoch_i
+        saver.save(sess, var.save_dir)  # , global_step=epoch_i
         print('Model Trained and Saved')
         return losses

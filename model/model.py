@@ -1,5 +1,5 @@
 import tensorflow.compat.v1 as tf
-from var import *
+import var
 
 
 # 从上面的网络架构图中，我们可以看出，其实用户的特征总数量是 128
@@ -13,7 +13,7 @@ def get_user_embedding(uid, user_gender, user_age, user_job):
         # 用户的特征维度设置为 32
         # 先初始化一个非常大的用户矩阵
         # tf.random_uniform 的第二个参数是初始化的最小值，这里是-1，第三个参数是初始化的最大值，这里是1
-        uid_embed_matrix = tf.Variable(tf.random_uniform([uid_max, embed_dim], -1, 1),
+        uid_embed_matrix = tf.Variable(tf.random_uniform([var.uid_max, var.embed_dim], -1, 1),
                                        name="uid_embed_matrix")
         # 根据指定用户ID找到他对应的嵌入层
         uid_embed_layer = tf.nn.embedding_lookup(uid_embed_matrix, uid,
@@ -22,7 +22,7 @@ def get_user_embedding(uid, user_gender, user_age, user_job):
         # 性别的特征维度设置为 16
         #         gender_embed_matrix = tf.Variable(tf.random_uniform([gender_max, embed_dim // 2], -1, 1),
         #                                           name= "gender_embed_matrix")
-        gender_embed_matrix = tf.Variable(tf.random_uniform([gender_max, embed_dim], -1, 1),
+        gender_embed_matrix = tf.Variable(tf.random_uniform([var.gender_max, var.embed_dim], -1, 1),
                                           name="gender_embed_matrix")
         gender_embed_layer = tf.nn.embedding_lookup(gender_embed_matrix, user_gender,
                                                     name="gender_embed_layer")
@@ -30,7 +30,7 @@ def get_user_embedding(uid, user_gender, user_age, user_job):
         # 年龄的特征维度设置为 16
         #         age_embed_matrix = tf.Variable(tf.random_uniform([age_max, embed_dim // 2], -1, 1),
         #                                        name="age_embed_matrix")
-        age_embed_matrix = tf.Variable(tf.random_uniform([age_max, embed_dim], -1, 1),
+        age_embed_matrix = tf.Variable(tf.random_uniform([var.age_max, var.embed_dim], -1, 1),
                                        name="age_embed_matrix")
         age_embed_layer = tf.nn.embedding_lookup(age_embed_matrix, user_age,
                                                  name="age_embed_layer")
@@ -38,7 +38,7 @@ def get_user_embedding(uid, user_gender, user_age, user_job):
         # 职业的特征维度设置为 16
         #         job_embed_matrix = tf.Variable(tf.random_uniform([job_max, embed_dim // 2], -1, 1),
         #                                        name = "job_embed_matrix")
-        job_embed_matrix = tf.Variable(tf.random_uniform([job_max, embed_dim], -1, 1),
+        job_embed_matrix = tf.Variable(tf.random_uniform([var.job_max, var.embed_dim], -1, 1),
                                        name="job_embed_matrix")
         job_embed_layer = tf.nn.embedding_lookup(job_embed_matrix, user_job,
                                                  name="job_embed_layer")
@@ -50,10 +50,10 @@ def get_user_feature_layer(uid_embed_layer, gender_embed_layer, age_embed_layer,
     with tf.name_scope("user_fc"):
         # 第一层全连接
         # tf.layers.dense 的第一个参数是输入，第二个参数是层的单元的数量
-        uid_fc_layer = tf.layers.dense(uid_embed_layer, embed_dim, name="uid_fc_layer", activation=tf.nn.relu)
-        gender_fc_layer = tf.layers.dense(gender_embed_layer, embed_dim, name="gender_fc_layer", activation=tf.nn.relu)
-        age_fc_layer = tf.layers.dense(age_embed_layer, embed_dim, name="age_fc_layer", activation=tf.nn.relu)
-        job_fc_layer = tf.layers.dense(job_embed_layer, embed_dim, name="job_fc_layer", activation=tf.nn.relu)
+        uid_fc_layer = tf.layers.dense(uid_embed_layer, var.embed_dim, name="uid_fc_layer", activation=tf.nn.relu)
+        gender_fc_layer = tf.layers.dense(gender_embed_layer, var.embed_dim, name="gender_fc_layer", activation=tf.nn.relu)
+        age_fc_layer = tf.layers.dense(age_embed_layer, var.embed_dim, name="age_fc_layer", activation=tf.nn.relu)
+        job_fc_layer = tf.layers.dense(job_embed_layer, var.embed_dim, name="job_fc_layer", activation=tf.nn.relu)
 
         # 第二层全连接
         # 将上面的每个分段组成一个完整的全连接层
@@ -72,7 +72,7 @@ def get_user_feature_layer(uid_embed_layer, gender_embed_layer, age_embed_layer,
 
 def get_movie_id_embed_layer(movie_id):
     with tf.name_scope("movie_embedding"):
-        movie_id_embed_matrix = tf.Variable(tf.random_uniform([movie_id_max, embed_dim], -1, 1),
+        movie_id_embed_matrix = tf.Variable(tf.random_uniform([var.movie_id_max, var.embed_dim], -1, 1),
                                             name="movie_id_embed_matrix")
         movie_id_embed_layer = tf.nn.embedding_lookup(movie_id_embed_matrix, movie_id, name="movie_id_embed_layer")
     return movie_id_embed_layer
@@ -80,11 +80,11 @@ def get_movie_id_embed_layer(movie_id):
 
 def get_movie_categories_layers(movie_categories):
     with tf.name_scope("movie_categories_layers"):
-        movie_categories_embed_matrix = tf.Variable(tf.random_uniform([movie_categories_max, embed_dim], -1, 1),
+        movie_categories_embed_matrix = tf.Variable(tf.random_uniform([var.movie_categories_max, var.embed_dim], -1, 1),
                                                     name="movie_categories_embed_matrix")
         movie_categories_embed_layer = tf.nn.embedding_lookup(movie_categories_embed_matrix, movie_categories,
                                                               name="movie_categories_embed_layer")
-        if combiner == "sum":
+        if var.combiner == "sum":
             movie_categories_embed_layer = tf.reduce_sum(movie_categories_embed_layer, axis=1, keep_dims=True)
     #     elif combiner == "mean":
 
@@ -94,7 +94,7 @@ def get_movie_categories_layers(movie_categories):
 def get_movie_cnn_layer(movie_titles, dropout_keep_prob):
     # 从嵌入矩阵中得到电影名对应的各个单词的嵌入向量
     with tf.name_scope("movie_embedding"):
-        movie_title_embed_matrix = tf.Variable(tf.random_uniform([movie_title_max, embed_dim], -1, 1),
+        movie_title_embed_matrix = tf.Variable(tf.random_uniform([var.movie_title_max, var.embed_dim], -1, 1),
                                                name="movie_title_embed_matrix")
         movie_title_embed_layer = tf.nn.embedding_lookup(movie_title_embed_matrix, movie_titles,
                                                          name="movie_title_embed_layer")
@@ -106,12 +106,12 @@ def get_movie_cnn_layer(movie_titles, dropout_keep_prob):
 
     # 对文本嵌入层使用不同尺寸的卷积核做卷积和最大池化
     pool_layer_lst = []
-    for window_size in window_sizes:
+    for window_size in var.window_sizes:
         with tf.name_scope("movie_txt_conv_maxpool_{}".format(window_size)):
             # [window_size, embed_dim, 1, filter_num] 表示输入的 channel 的个数是1，输出的 channel 的个数是 filter_num
-            filter_weights = tf.Variable(tf.truncated_normal([window_size, embed_dim, 1, filter_num], stddev=0.1),
+            filter_weights = tf.Variable(tf.truncated_normal([window_size, var.embed_dim, 1, var.filter_num], stddev=0.1),
                                          name="filter_weights")
-            filter_bias = tf.Variable(tf.constant(0.1, shape=[filter_num]), name="filter_bias")
+            filter_bias = tf.Variable(tf.constant(0.1, shape=[var.filter_num]), name="filter_bias")
 
             # conv2d 是指用到的卷积核的大小是 [filter_height * filter_width * in_channels, output_channels]
             # 在这里卷积核会向两个维度的方向进行滑动
@@ -129,7 +129,7 @@ def get_movie_cnn_layer(movie_titles, dropout_keep_prob):
             # 第三个参数是 strides，和 conv2d 的设置是一样的
             # 这边的池化是将上面每个卷积核的卷积结果转换为一个元素
             # 由于这里的卷积核的数量是 8 个，所以下面生成的是一个具有 8 个元素的向量
-            maxpool_layer = tf.nn.max_pool(relu_layer, [1, sentences_size - window_size + 1, 1, 1], [1, 1, 1, 1],
+            maxpool_layer = tf.nn.max_pool(relu_layer, [1, var.sentences_size - window_size + 1, 1, 1], [1, 1, 1, 1],
                                            padding="VALID", name="maxpool_layer")
             pool_layer_lst.append(maxpool_layer)
 
@@ -142,7 +142,7 @@ def get_movie_cnn_layer(movie_titles, dropout_keep_prob):
         # 所以最终生成的是一个 8 维的二维矩阵，它的另一个维度就是不同的窗口的数量
         # 在这里就是 2,3,4,5，那么最终就是一个 8*4 的矩阵，
         pool_layer = tf.concat(pool_layer_lst, 3, name="pool_layer")
-        max_num = len(window_sizes) * filter_num
+        max_num = len(var.window_sizes) * var.filter_num
         # 将这个 8*4 的二维矩阵平铺成一个具有 32 个元素的一维矩阵
         pool_layer_flat = tf.reshape(pool_layer, [-1, 1, max_num], name="pool_layer_flat")
         dropout_layer = tf.nn.dropout(pool_layer_flat, dropout_keep_prob, name="dropout_layer")
@@ -152,9 +152,9 @@ def get_movie_cnn_layer(movie_titles, dropout_keep_prob):
 def get_movie_feature_layer(movie_id_embed_layer, movie_categories_embed_layer, dropout_layer):
     with tf.name_scope("movie_fc"):
         # 第一层全连接
-        movie_id_fc_layer = tf.layers.dense(movie_id_embed_layer, embed_dim, name="movie_id_fc_layer",
+        movie_id_fc_layer = tf.layers.dense(movie_id_embed_layer, var.embed_dim, name="movie_id_fc_layer",
                                             activation=tf.nn.relu)
-        movie_categories_fc_layer = tf.layers.dense(movie_categories_embed_layer, embed_dim,
+        movie_categories_fc_layer = tf.layers.dense(movie_categories_embed_layer, var.embed_dim,
                                                     name="movie_categories_fc_layer", activation=tf.nn.relu)
 
         # 第二层全连接

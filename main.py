@@ -5,7 +5,7 @@ from pathlib import Path
 from Helper.dataProcessor import load_data
 from model.rating import rating_movie
 from model.train import train
-import config as cg
+import var as cg
 from saveFeature import saveUserFeature, saveMovieFeature
 from recommend import recommend_same_type_movie, recommend_your_favorite_movie, recommend_other_favorite_movie
 

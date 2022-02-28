@@ -1,5 +1,5 @@
 import tensorflow.compat.v1 as tf
-from config import *
+from var import *
 
 
 # 从上面的网络架构图中，我们可以看出，其实用户的特征总数量是 128

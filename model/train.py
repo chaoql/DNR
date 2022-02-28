@@ -8,7 +8,7 @@ import time
 import datetime
 import os
 import tensorflow.compat.v1 as tf
-import config as cg
+import var as cg
 
 
 tf.reset_default_graph()

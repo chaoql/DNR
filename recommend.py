@@ -3,7 +3,7 @@ import random
 import tensorflow.compat.v1 as tf
 import numpy as np
 from Helper.helper import load_params
-import config as cg
+import var as cg
 
 
 def recommend_print(sim, top_k, str="以下是给您的推荐："):

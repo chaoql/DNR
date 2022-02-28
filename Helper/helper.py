@@ -2,7 +2,7 @@ import os
 import pickle
 import pandas as pd
 import tensorflow.compat.v1 as tf
-from config import *
+from var import *
 
 
 def seeRawData():

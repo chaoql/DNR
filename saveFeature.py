@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 import tensorflow.compat.v1 as tf
 from Helper.helper import load_params, get_tensors
-import config as cg
+import var as cg
 
 
 def saveMovieFeature():

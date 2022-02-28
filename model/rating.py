@@ -1,7 +1,7 @@
 import tensorflow.compat.v1 as tf
 import numpy as np
 from Helper.dataProcessor import load_data
-import config as cg
+import var as cg
 from Helper.helper import get_tensors
 from Helper.helper import load_params
 

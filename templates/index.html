@@ -1,66 +1,89 @@
 ﻿{% extends "layout.html" %}
+{% block css %}
+    <link rel="stylesheet" href="/static/css/swiper-bundle.min.css">
+{% endblock %}
 {% block content %}
     <section class="home">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="owl-carousel owl-theme slide" id="featured">
-                        <div class="item">
-                            <article class="featured">
-                                <div class="overlay" ></div>
-                                <figure>
-                                    <img src="/static/images/news/img04.jpg" alt="Sample Article">
-                                </figure>
-                                <div class="details">
-                                    <div class="category"><a href="category.html">Computer</a></div>
-                                    <h1><a href="single.html">Phasellus iaculis quam sed est elementum vel ornare ligula
-                                        venenatis</a></h1>
-                                    <div class="time">December 26, 2016</div>
+                        <div class="swiper" style="--swiper-theme-color:#FFFFFF">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="item">
+                                        <article class="featured">
+                                            <div class="overlay"></div>
+                                            <figure>
+                                                <img src="/static/images/news/img04.jpg" alt="Sample Article">
+                                            </figure>
+                                            <div class="details">
+                                                <div class="category"><a href="category.html">Computer</a></div>
+                                                <h1><a href="single.html">Phasellus iaculis quam sed est elementum vel
+                                                    ornare ligula
+                                                    venenatis</a></h1>
+                                                <div class="time">December 26, 2016</div>
+                                            </div>
+                                        </article>
+                                    </div>
                                 </div>
-                            </article>
-                        </div>
-                        <div class="item">
-                            <article class="featured">
-                                <div class="overlay"></div>
-                                <figure>
-                                    <img src="/static/images/news/img14.jpg" alt="Sample Article">
-                                </figure>
-                                <div class="details">
-                                    <div class="category"><a href="category.html">Travel</a></div>
-                                    <h1><a href="single.html">Class aptent taciti sociosqu ad litora torquent per
-                                        conubia
-                                        nostra</a></h1>
-                                    <div class="time">December 10, 2016</div>
+                                <div class="swiper-slide">
+                                    <div class="item">
+                                        <article class="featured">
+                                            <div class="overlay"></div>
+                                            <figure>
+                                                <img src="/static/images/news/img14.jpg" alt="Sample Article">
+                                            </figure>
+                                            <div class="details">
+                                                <div class="category"><a href="category.html">Travel</a></div>
+                                                <h1><a href="single.html">Class aptent taciti sociosqu ad litora
+                                                    torquent per
+                                                    conubia
+                                                    nostra</a></h1>
+                                                <div class="time">December 10, 2016</div>
+                                            </div>
+                                        </article>
+                                    </div>
                                 </div>
-                            </article>
-                        </div>
-                        <div class="item">
-                            <article class="featured">
-                                <div class="overlay"></div>
-                                <figure>
-                                    <img src="/static/images/news/img13.jpg" alt="Sample Article">
-                                </figure>
-                                <div class="details">
-                                    <div class="category"><a href="category.html">International</a></div>
-                                    <h1><a href="single.html">Maecenas accumsan tortor ut velit pharetra mollis</a></h1>
-                                    <div class="time">October 12, 2016</div>
+                                <div class="swiper-slide">
+                                    <div class="item">
+                                        <article class="featured">
+                                            <div class="overlay"></div>
+                                            <figure>
+                                                <img src="/static/images/news/img13.jpg" alt="Sample Article">
+                                            </figure>
+                                            <div class="details">
+                                                <div class="category"><a href="category.html">International</a></div>
+                                                <h1><a href="single.html">Maecenas accumsan tortor ut velit pharetra
+                                                    mollis</a></h1>
+                                                <div class="time">October 12, 2016</div>
+                                            </div>
+                                        </article>
+                                    </div>
                                 </div>
-                            </article>
-                        </div>
-                        <div class="item">
-                            <article class="featured">
-                                <div class="overlay"></div>
-                                <figure>
-                                    <img src="/static/images/news/img05.jpg" alt="Sample Article">
-                                </figure>
-                                <div class="details">
-                                    <div class="category"><a href="category.html">Lifestyle</a></div>
-                                    <h1><a href="single.html">Mauris elementum libero at pharetra auctor Fusce
-                                        ullamcorper
-                                        elit</a></h1>
-                                    <div class="time">November 27, 2016</div>
+                                <div class="swiper-slide">
+                                    <div class="item">
+                                        <article class="featured">
+                                            <div class="overlay"></div>
+                                            <figure>
+                                                <img src="/static/images/news/img05.jpg" alt="Sample Article">
+                                            </figure>
+                                            <div class="details">
+                                                <div class="category"><a href="category.html">Lifestyle</a></div>
+                                                <h1><a href="single.html">Mauris elementum libero at pharetra auctor
+                                                    Fusce
+                                                    ullamcorper
+                                                    elit</a></h1>
+                                                <div class="time">November 27, 2016</div>
+                                            </div>
+                                        </article>
+                                    </div>
                                 </div>
-                            </article>
+                            </div>
+
+                            <!-- 如果需要导航按钮 -->
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
                         </div>
                     </div>
                     <div class="line">
@@ -322,25 +345,24 @@
             </div>
         </div>
     </section>
+{% endblock %}
+{% block js %}
+    <script src="/static/js/swiper-bundle.min.js"></script>
+    <script>
+        var mySwiper = new Swiper('.swiper', {
+            loop: true, // 循环模式选项
 
-    <!-- Start footer -->
-
-    <!-- End Footer -->
-
-    <!-- JS -->
-
-    <style>
-        .copyrights {
-            text-indent: -9999px;
-            height: 0;
-            line-height: 0;
-            font-size: 0;
-            overflow: hidden;
-        }
-    </style>
-    <div class="copyrights" id="links20210126">
-        Collect from <a href="http://www.cssmoban.com/" title="网站模板">模板之家</a>
-        <a href="http://cooco.net.cn/" title="组卷网">组卷网</a>
-    </div>
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            autoplay: {
+                delay: 3000,
+                stopOnLastSlide: false,
+                disableOnInteraction: true,
+            }
+        })
+    </script>
 {% endblock %}
 

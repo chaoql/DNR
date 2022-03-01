@@ -39,7 +39,7 @@ def check_login():
         return False
 
     try:
-        user_info = User.query.filter_by(id=auth_info[1]).first()
+        user_info = User.query.filter_by(UserID=auth_info[1]).first()
     except Exception:
         return False
 

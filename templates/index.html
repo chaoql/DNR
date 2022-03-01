@@ -1,6 +1,6 @@
 ﻿{% extends "layout.html" %}
 {% block css %}
-    <link rel="stylesheet" href="/static/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="{{ buildStaticUrl("/css/swiper-bundle.min.css") }}">
 {% endblock %}
 {% block content %}
     <section class="home">
@@ -15,7 +15,7 @@
                                         <article class="featured">
                                             <div class="overlay"></div>
                                             <figure>
-                                                <img src="/static/images/news/img04.jpg" alt="Sample Article">
+                                                <img src="{{ buildStaticUrl("/images/news/img04.jpg") }}" alt="Sample Article">
                                             </figure>
                                             <div class="details">
                                                 <div class="category"><a href="category.html">Computer</a></div>
@@ -32,7 +32,7 @@
                                         <article class="featured">
                                             <div class="overlay"></div>
                                             <figure>
-                                                <img src="/static/images/news/img14.jpg" alt="Sample Article">
+                                                <img src="{{ buildStaticUrl("/images/news/img14.jpg") }}" alt="Sample Article">
                                             </figure>
                                             <div class="details">
                                                 <div class="category"><a href="category.html">Travel</a></div>
@@ -50,7 +50,7 @@
                                         <article class="featured">
                                             <div class="overlay"></div>
                                             <figure>
-                                                <img src="/static/images/news/img13.jpg" alt="Sample Article">
+                                                <img src="{{ buildStaticUrl("/images/news/img13.jpg") }}" alt="Sample Article">
                                             </figure>
                                             <div class="details">
                                                 <div class="category"><a href="category.html">International</a></div>
@@ -66,7 +66,7 @@
                                         <article class="featured">
                                             <div class="overlay"></div>
                                             <figure>
-                                                <img src="/static/images/news/img05.jpg" alt="Sample Article">
+                                                <img src="{{ buildStaticUrl("/images/news/img05.jpg") }}" alt="Sample Article">
                                             </figure>
                                             <div class="details">
                                                 <div class="category"><a href="category.html">Lifestyle</a></div>
@@ -94,7 +94,7 @@
                             <div class="inner">
                                 <figure>
                                     <a href="single.html">
-                                        <img src="/static/images/news/img11.jpg" alt="Sample Article">
+                                        <img src="{{ buildStaticUrl("/images/news/img11.jpg") }}" alt="Sample Article">
                                     </a>
                                 </figure>
                                 <div class="details">
@@ -347,7 +347,7 @@
     </section>
 {% endblock %}
 {% block js %}
-    <script src="/static/js/swiper-bundle.min.js"></script>
+    <script src="{{ buildStaticUrl("/js/swiper-bundle.min.js") }}"></script>
     <script>
         var mySwiper = new Swiper('.swiper', {
             loop: true, // 循环模式选项

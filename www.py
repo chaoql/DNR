@@ -4,6 +4,7 @@ from interceptors.errorHandler import *  # 错误处理器
 from controllers.index import index_page
 from controllers.member import member_page
 from common.libs.FLHelper.UrlManager import UrlManager
+from interceptors.Auth import *
 
 toolbar = DebugToolbarExtension(app)  # 调试模式
 

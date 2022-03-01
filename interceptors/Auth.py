@@ -1,7 +1,7 @@
 from application import app
 from flask import request, g
 from common.models.user import User
-from common.libs.UserService import UserService
+from common.libs.FLHelper.UserService import UserService
 
 '''
 拦截器

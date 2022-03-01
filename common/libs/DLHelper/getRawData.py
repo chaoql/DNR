@@ -36,7 +36,7 @@ def download_extract(database_name, data_path):
     if database_name == DATASET_ML1M:
         url = 'http://files.grouplens.org/datasets/movielens/ml-1m.zip'
         hash_code = 'c4d9eecfca2ab87c1945afe126590906'
-        extract_path = os.path.join(data_path, '../ml-1m')
+        extract_path = os.path.join(data_path, '../../../ml-1m')
         save_path = os.path.join(data_path, 'ml-1m.zip')
         extract_fn = _unzip
 

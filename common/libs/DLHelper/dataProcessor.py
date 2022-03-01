@@ -10,7 +10,7 @@ def load_data():
     """
     # 读取User数据
     users_title = ['UserID', 'Gender', 'Age', 'JobID', 'Zip-code']
-    users = pd.read_table('../ml-1m/users.dat', sep='::', header=None, names=users_title, engine='python')
+    users = pd.read_table('../../../ml-1m/users.dat', sep='::', header=None, names=users_title, engine='python')
     # 保留以下特征
     users = users.filter(regex='UserID|Gender|Age|JobID')
     users_orig = users.values
@@ -23,7 +23,7 @@ def load_data():
 
     # 读取Movie数据集
     movies_title = ['MovieID', 'Title', 'Genres']
-    movies = pd.read_table('../ml-1m/movies.dat', sep='::', header=None, names=movies_title, engine='python',
+    movies = pd.read_table('../../../ml-1m/movies.dat', sep='::', header=None, names=movies_title, engine='python',
                            encoding="ISO-8859-1")
     movies_orig = movies.values
     # 将Title中的年份去掉
@@ -71,7 +71,7 @@ def load_data():
 
     # 读取评分数据集
     ratings_title = ['UserID', 'MovieID', 'ratings', 'timestamps']
-    ratings = pd.read_table('../ml-1m/ratings.dat', sep='::', header=None, names=ratings_title, engine='python')
+    ratings = pd.read_table('../../../ml-1m/ratings.dat', sep='::', header=None, names=ratings_title, engine='python')
     ratings = ratings.filter(regex='UserID|MovieID|ratings')
 
     # 合并三个表

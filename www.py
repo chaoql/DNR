@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-from application import app
 from flask_debugtoolbar import DebugToolbarExtension  # 调试工具:侧边栏
-from interceptors.Auth import *  # 拦截器
 from interceptors.errorHandler import *  # 错误处理器
 from controllers.index import index_page
 from controllers.member import member_page
-from common.libs.UrlManager import UrlManager
+from common.libs.FLHelper.UrlManager import UrlManager
 
 toolbar = DebugToolbarExtension(app)  # 调试模式
 

@@ -1,6 +1,6 @@
 import pickle
 from sklearn.model_selection import train_test_split
-from Helper.helper import get_inputs
+from common.libs.DLHelper.helper import get_inputs
 from model.model import get_user_embedding, get_user_feature_layer, get_movie_feature_layer, get_movie_cnn_layer, \
     get_movie_id_embed_layer, get_movie_categories_layers
 import numpy as np

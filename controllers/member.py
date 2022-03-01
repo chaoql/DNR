@@ -1,10 +1,10 @@
 from application import app, db
-from flask import Blueprint, render_template, request, make_response, redirect
-from common.libs.Helper import ops_renderJSON, ops_renderErrJSON, ops_render
-from common.libs.UrlManager import UrlManager
-from common.libs.DateHelper import getCurrentTime
+from flask import Blueprint, request, make_response, redirect
+from common.libs.FLHelper.Helper import ops_renderJSON, ops_renderErrJSON, ops_render
+from common.libs.FLHelper.UrlManager import UrlManager
+from common.libs.FLHelper.DateHelper import getCurrentTime
 from common.models.user import User
-from common.libs.UserService import UserService
+from common.libs.FLHelper.UserService import UserService
 member_page = Blueprint("member_page", __name__)
 
 

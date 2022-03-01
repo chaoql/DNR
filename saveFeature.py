@@ -1,7 +1,7 @@
 import pickle
 import numpy as np
 import tensorflow.compat.v1 as tf
-from Helper.helper import load_params, get_tensors
+from common.libs.DLHelper.helper import load_params, get_tensors
 import var
 
 

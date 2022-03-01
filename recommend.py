@@ -2,7 +2,7 @@ import pickle
 import random
 import tensorflow.compat.v1 as tf
 import numpy as np
-from Helper.helper import load_params
+from common.libs.DLHelper.helper import load_params
 import var
 
 

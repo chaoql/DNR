@@ -1,10 +1,8 @@
-from flask import Flask, Blueprint, request, make_response, jsonify, render_template, redirect
-from sqlalchemy import text
-from application import db, app
-from common.models.user import User
+from flask import Blueprint, request, redirect
+from application import db
 from common.models.movie import Movie
-from common.libs.Helper import ops_render, iPageNation
-from common.libs.UrlManager import UrlManager
+from common.libs.FLHelper.Helper import ops_render, iPageNation
+from common.libs.FLHelper.UrlManager import UrlManager
 from sqlalchemy.sql.expression import func
 
 index_page = Blueprint("index_page", __name__)

@@ -1,8 +1,8 @@
 from pathlib import Path
-from Helper.getRawData import download_extract
-from Helper.helper import seeRawData, saveProcessedData, save_params, load_params
+from common.libs.DLHelper.getRawData import download_extract
+from common.libs.DLHelper.helper import seeRawData, saveProcessedData, save_params, load_params
 from flask_script import Command
-from Helper.dataProcessor import load_data
+from common.libs.DLHelper.dataProcessor import load_data
 from model.train import train
 import var
 from recommend import recommend_same_type_movie, recommend_your_favorite_movie, recommend_other_favorite_movie

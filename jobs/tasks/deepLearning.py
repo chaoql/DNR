@@ -19,7 +19,7 @@ class downloadData(Command):
         flag = 0
         dataPath = Path("./ml-1m")
         if not dataPath.exists():
-            data_dir = './'
+            data_dir = '../'
             download_extract('ml-1m', data_dir)
             flag = 1
         if flag == 1:

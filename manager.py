@@ -3,7 +3,8 @@ from application import app, db, manager
 from flask_script import Server, Command
 import traceback
 import sys
-from job.deepLearning import seeRawData_, downloadData, dataProcessSave, paramsSave, saveFeature
+from jobs.tasks.deepLearning import seeRawData_, downloadData, dataProcessSave, paramsSave, saveFeature
+from jobs.launcher import runjob
 from www import *
 import flask
 
@@ -25,6 +26,9 @@ manager.add_command("paramsSave", paramsSave)
 
 # 保存特征，运行命令：python manager.py saveFeature
 manager.add_command("saveFeature", saveFeature)
+
+# Job框架：python manager.py runjob
+manager.add_command("runjob", runjob)
 
 
 def main():

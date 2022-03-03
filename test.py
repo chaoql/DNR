@@ -1,2 +1,2 @@
-with open('./params.p', mode='rb') as f:
-    print("ok")
+str = "https://new.qq.com/ch/antip/"
+print(str.split("/")[-2])

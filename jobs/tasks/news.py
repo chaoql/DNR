@@ -41,7 +41,7 @@ class JobTask:
             items_data = self.parseList(content, url)  # 解析界面  获得[{单一电影的名字、详情网址}{...}{...}]型的信息
             for item in items_data:  # 单电影信息循环
                 tmp_content = self.getHttpContent(item["link"])  # 单个电影详情页面的Content
-                a = self.parseInfo(tmp_content, item)
+                self.parseInfo(tmp_content, item)
 
     def parseInfo(self, content, item):
         """
@@ -54,14 +54,17 @@ class JobTask:
             tmp_text = soup.select("div.content-article p.one-p")
             item["text"] = ""
             for text in tmp_text:
-                if "img" in text:
+                if text.select("img"):
                     continue
                 item["text"] += text.getText()
+            if item["text"] == "":
+                app.logger.warning("网站无文本信息，跳过...")
+                return False
             app.logger.warning(item["text"])
             tmp_year = soup.select("div.year.through span")[0].getText()
             tmp_month_day = soup.select("div.md")[0].getText().replace("/", "-")
-            tmp_time = soup.select("div.time")[0].getText()+":00"
-            tmp_date = tmp_year+"-"+tmp_month_day+" "+tmp_time
+            tmp_time = soup.select("div.time")[0].getText() + ":00"
+            tmp_date = tmp_year + "-" + tmp_month_day + " " + tmp_time
             item["date"] = tmp_date
             tmp_news_info = News.query.filter_by(hash=item["hash"]).first()
             if tmp_news_info:
@@ -75,7 +78,7 @@ class JobTask:
 
     def parseList(self, content, url):
         """
-        解析电影列表页面的content
+        解析新闻列表页面的content
         :param url:
         :param content: 待解析的页面Content
         :return: 包含电影名称和电影详情网址字典的列表
@@ -90,10 +93,8 @@ class JobTask:
         data = []
         url_info = urlparse(url=url)
         url_domain = url_info[0] + "://" + url_info[1]
-        # app.logger.warning(url_domain)
         tmp_soup = BeautifulSoup(str(content), "html.parser")
         tmp_list = tmp_soup.select("div#List div.channel_mod ul#dataFull.list li.item.cf.itme-ls")
-        # app.logger.warning(tmp_list)
         for item in tmp_list:
             try:
                 tmp_genre = url.split("/")[-2]
@@ -102,8 +103,11 @@ class JobTask:
                 tmp_target = item.select("a.picture img")
                 tmp_name = tmp_target[0]["alt"]
                 tmp_pic = tmp_target[0]["src"]
+                global tmp_Authors
                 tmp_Authors = item.select("div.detail div.binfo.cf div.fl a.source")[0].getText()
-                # app.logger.warning(tmp_Authors)
+                if len(tmp_Authors) == 0:
+                    tmp_Authors = item.select("div.detail div.binfo.cf div.fl span.source")[0].getText()
+                app.logger.warning(tmp_name)
                 if "http:" not in tmp_href and "https:" not in tmp_href:
                     tmp_href = url_domain + tmp_href
                 tmp_data = {
@@ -133,7 +137,7 @@ class JobTask:
             driver = webdriver.Chrome(executable_path="C:/Program Files/Google/Chrome/Application/chromedriver.exe")
             driver.get(url=url)
             if flag == "list":
-                for i in range(1, 100):
+                for i in range(1, 200):
                     time.sleep(0.5)
                     driver.execute_script("window.scrollTo(window.scrollX, %d);" % (i * 200))
             return driver.page_source

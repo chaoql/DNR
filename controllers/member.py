@@ -75,7 +75,6 @@ def login():
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
                         value="%s#%s" % (UserService.geneAuthCode(user_info), user_info.UserID), max_age=60 * 60 * 24 * 120)
     return response
-    # return ops_renderJSON(msg="登陆成功~~")
 
 
 @member_page.route("/logout")

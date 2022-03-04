@@ -15,7 +15,7 @@ SQLALCHEMY_DATABASE_URI = 'mysql://root:cql666@localhost:3306/news_recommendatio
 
 # 家里wifi
 DOMAIN = {
-    'www': "http://192.168.0.102:8080"
+    'www': "http://192.168.0.102:8080/"
 }
 
 '''

@@ -23,6 +23,8 @@ class JobTask:
         self.source = "puffpost"
         self.urls = ["https://new.qq.com/ch/antip/", "https://new.qq.com/ch/ent/", "https://new.qq.com/ch/milite/",
                      "https://new.qq.com/ch/world/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/ "]
+        self.a_urls = ["https://new.qq.com/ch/milite/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/ "]
+        self.b_urls = ["https://new.qq.com/ch/milite/", "https://new.qq.com/ch/world/"]
 
     def run(self, params):
         self.getList()
@@ -35,10 +37,14 @@ class JobTask:
         """
         app.logger.warning("正在获取新闻列表信息...")
         for url in self.urls:  # 页面循环
+            genre = "a"
+            if url in self.b_urls:
+                genre = "b"
+            else:
+                continue
             app.logger.warning("get list: " + url)
             content = self.getHttpContent(url, flag="list")  # 线上获取content操作时，必须关闭vpn
-            time.sleep(0.3)
-            items_data = self.parseList(content, url)  # 解析界面  获得[{单一电影的名字、详情网址}{...}{...}]型的信息
+            items_data = self.parseList(content, url, genre)  # 解析界面  获得[{单一电影的名字、详情网址}{...}{...}]型的信息
             for item in items_data:  # 单电影信息循环
                 tmp_content = self.getHttpContent(item["link"])  # 单个电影详情页面的Content
                 self.parseInfo(tmp_content, item)
@@ -76,7 +82,7 @@ class JobTask:
             traceback.print_exc()
         return True
 
-    def parseList(self, content, url):
+    def parseList(self, content, url, genres):
         """
         解析新闻列表页面的content
         :param url:
@@ -85,16 +91,14 @@ class JobTask:
         """
         app.logger.warning("正在解析新闻列表页面的content...")
         # app.logger.warning(content)
-        with open("C:\\Users\\123\\Desktop\\test.txt", mode="w+", encoding="gb18030") as f:
-            # content = content.decode("gb18030")
-            f.write(content)
-            f.flush()
-            f.close()
         data = []
         url_info = urlparse(url=url)
         url_domain = url_info[0] + "://" + url_info[1]
         tmp_soup = BeautifulSoup(str(content), "html.parser")
-        tmp_list = tmp_soup.select("div#List div.channel_mod ul#dataFull.list li.item.cf.itme-ls")
+        if genres == "a":
+            tmp_list = tmp_soup.select("div#List div.channel_mod ul#dataFull.list li.item.cf.itme-ls")
+        else:
+            tmp_list = tmp_soup.select("div#List div.hotnews ul#hot_scroll.list li.item.cf.itme-ls")
         for item in tmp_list:
             try:
                 tmp_genre = url.split("/")[-2]
@@ -103,7 +107,6 @@ class JobTask:
                 tmp_target = item.select("a.picture img")
                 tmp_name = tmp_target[0]["alt"]
                 tmp_pic = tmp_target[0]["src"]
-                global tmp_Authors
                 tmp_Authors = item.select("div.detail div.binfo.cf div.fl a.source")[0].getText()
                 if len(tmp_Authors) == 0:
                     tmp_Authors = item.select("div.detail div.binfo.cf div.fl span.source")[0].getText()

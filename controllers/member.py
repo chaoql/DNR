@@ -5,6 +5,7 @@ from common.libs.FLHelper.UrlManager import UrlManager
 from common.libs.FLHelper.DateHelper import getCurrentTime
 from common.models.user import User
 from common.libs.FLHelper.UserService import UserService
+
 member_page = Blueprint("member_page", __name__)
 
 
@@ -73,7 +74,8 @@ def login():
         return ops_renderErrJSON(msg="账号已被禁用，请联系管理员解决~~")
     response = make_response(ops_renderJSON(msg="登陆成功"))
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
-                        value="%s#%s" % (UserService.geneAuthCode(user_info), user_info.UserID), max_age=60 * 60 * 24 * 120)
+                        value="%s#%s" % (UserService.geneAuthCode(user_info), user_info.UserID),
+                        max_age=60 * 60 * 24 * 120)
     return response
 
 
@@ -82,3 +84,13 @@ def logout():
     response = make_response(redirect(UrlManager.buildUrl("/")))
     response.delete_cookie(app.config["AUTH_COOKIE_NAME"])
     return response
+
+
+@member_page.route("/forgot")
+def forgot():
+    return ops_render("/member/forgot.html")
+
+
+@member_page.route("/reset")
+def reset():
+    return ops_render("/member/reset.html")

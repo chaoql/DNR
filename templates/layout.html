@@ -50,8 +50,13 @@
             <div class="col-md-3 text-right">
                 <ul class="nav-icons">
                     {% if current_user %}
-                        <li><a href="#">{{ current_user.login_name }}</a></li>
-                        <li><a href="{{ buildUrl('/member/logout') }}">Logout</a></li>
+                        <li><a href="#">{{ current_user.login_name }}</a>
+                        <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+                            <li><a href="category.html">Your profile</a></li>
+                            <li><a href="{{ buildUrl('/member/reset') }}">Reset Password</a></li>
+                            <li><a href="{{ buildUrl('/member/logout') }}">Logout</a></li>
+                        </ul>
+                        </li>
                     {% else %}
                         <li><a href="{{ buildUrl("/member/reg") }}">
                             <div>Register</div>

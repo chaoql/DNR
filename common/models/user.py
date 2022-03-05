@@ -5,10 +5,10 @@ from application import db
 class User(db.Model):
     __tablename__ = 'user'
 
-    UserID = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    Gender = db.Column(db.Integer)
-    Age = db.Column(db.Integer)
-    OccupationID = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    gender = db.Column(db.String(255, 'utf8_bin'))
+    age = db.Column(db.Integer)
+    occupation = db.Column(db.String(255, 'utf8_bin'))
     nickname = db.Column(db.String(255, 'utf8_bin'), nullable=False)
     login_name = db.Column(db.String(255, 'utf8_bin'), nullable=False)
     login_pwd = db.Column(db.String(255, 'utf8_bin'), nullable=False)
@@ -16,3 +16,4 @@ class User(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False)
     created_time = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.Integer, nullable=False)
+    email = db.Column(db.String(255, 'utf8_bin'), nullable=False)

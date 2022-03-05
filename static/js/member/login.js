@@ -12,7 +12,7 @@ var member_reg_ops = {
             }
             const login_name = $(".login-wrap input[name=login_name]").val();
             const login_pwd = $(".login-wrap input[name=login_pwd]").val();
-            if (login_name == undefined || login_name.length < 1) {
+            if (login_name === undefined || login_name.length < 1) {
                 common_ops.alert("请输入正确的登陆用户名~~");
                 return;
             }

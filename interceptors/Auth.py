@@ -1,5 +1,7 @@
 from application import app
-from flask import request, g
+from flask import request, g, redirect
+
+from common.libs.FLHelper.UrlManager import UrlManager
 from common.models.user import User
 from common.libs.FLHelper.UserService import UserService
 
@@ -15,6 +17,13 @@ def before_request():
     g.current_user = None
     if user_info:
         g.current_user = user_info
+        return
+    else:
+        if request.path.endswith("/member/login") or request.path.endswith("/member/reg") \
+                or request.path.endswith("/member/forgot"):
+            return
+        if request.path == '/' or request.path == '/member/info':
+            return redirect(UrlManager.buildUrl("member/login"))
     return
 
 
@@ -39,7 +48,7 @@ def check_login():
         return False
 
     try:
-        user_info = User.query.filter_by(UserID=auth_info[1]).first()
+        user_info = User.query.filter_by(id=auth_info[1]).first()
     except Exception:
         return False
 

@@ -19,7 +19,7 @@ class UserService:
     @staticmethod
     def geneAuthCode(user_info=None):
         m = hashlib.md5()
-        str = "%s-%s-%s-%s-%s" % (user_info.UserID, user_info.login_name,
+        str = "%s-%s-%s-%s-%s" % (user_info.id, user_info.login_name,
                                   user_info.login_pwd, user_info.login_salt, user_info.status)
         m.update(str.encode("utf-8"))
         return m.hexdigest()

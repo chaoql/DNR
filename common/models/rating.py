@@ -5,7 +5,7 @@ from application import db
 class Rating(db.Model):
     __tablename__ = 'rating'
 
-    RatingID = db.Column(db.Integer, primary_key=True)
-    UserID = db.Column(db.Integer, nullable=False)
-    NewsID = db.Column(db.Integer, nullable=False)
-    Rating = db.Column(db.Integer, nullable=False)
+    ratingID = db.Column(db.Integer, primary_key=True)
+    userID = db.Column(db.Integer, nullable=False)
+    newsID = db.Column(db.Integer, nullable=False)
+    rate = db.Column(db.Integer, nullable=False)

@@ -12,6 +12,7 @@ var member_reg_ops = {
             }
             const nick_name = $(".reg-wrap input[name=nick_name]").val();
             const login_name = $(".reg-wrap input[name=login_name]").val();
+            const email = $(".reg-wrap input[name=email]").val();
             const login_pwd = $(".reg-wrap input[name=login_pwd]").val();
             const login_pwd2 = $(".reg-wrap input[name=login_pwd2]").val();
             if (nick_name == undefined || nick_name.length < 1) {
@@ -20,6 +21,10 @@ var member_reg_ops = {
             }
             if (login_name == undefined || login_name.length < 1) {
                 common_ops.alert("请输入正确的登陆用户名~~");
+                return;
+            }
+            if (email == undefined || email.length < 1) {
+                common_ops.alert("请输入正确的邮箱~~");
                 return;
             }
             if (login_pwd == undefined || login_pwd.length < 6) {
@@ -39,6 +44,7 @@ var member_reg_ops = {
                 data:{
                     nick_name:nick_name,
                     login_name:login_name,
+                    email:email,
                     login_pwd:login_pwd,
                     login_pwd2:login_pwd2,
                 },
@@ -48,7 +54,7 @@ var member_reg_ops = {
                     var callback=null;
                     if(res.code == 200){
                         callback=function (){
-                            window.location.href=common_ops.buildUrl("/");
+                            window.location.href=common_ops.buildUrl("/member/info");
                         }
                     }
                     common_ops.alert(res.msg, callback);

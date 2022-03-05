@@ -114,12 +114,12 @@ class JobTask:
                 if "http:" not in tmp_href and "https:" not in tmp_href:
                     tmp_href = url_domain + tmp_href
                 tmp_data = {
-                    "Title": tmp_name,
+                    "title": tmp_name,
                     "link": tmp_href,
                     "photo": tmp_pic,
                     "hash": hashlib.md5(tmp_href.encode("utf-8")).hexdigest(),
-                    "Authors": tmp_Authors,
-                    "Genres": tmp_genre
+                    "authors": tmp_Authors,
+                    "genres": tmp_genre
                 }
                 data.append(tmp_data)
             except Exception as e:

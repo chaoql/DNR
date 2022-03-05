@@ -1,5 +1,5 @@
 from application import app, db
-from flask import Blueprint, request, make_response, redirect
+from flask import Blueprint, request, make_response, redirect, g
 from common.libs.FLHelper.Helper import ops_renderJSON, ops_renderErrJSON, ops_render
 from common.libs.FLHelper.UrlManager import UrlManager
 from common.libs.FLHelper.DateHelper import getCurrentTime
@@ -16,6 +16,7 @@ def reg():
     req = request.values
     nick_name = req["nick_name"] if "nick_name" in req else ""
     login_name = req["login_name"] if "login_name" in req else ""
+    email = req["email"] if "email" in req else ""
     login_pwd = req["login_pwd"] if "login_pwd" in req else ""
     login_pwd2 = req["login_pwd2"] if "login_pwd2" in req else ""
     # 因为前端可能会被穿透，所以后端要再验证一遍
@@ -24,6 +25,9 @@ def reg():
 
     if login_name is None or len(login_name) < 1:
         return ops_renderErrJSON(msg="请输入正确的用户名~~~")
+
+    if email is None or len(email) < 1:
+        return ops_renderErrJSON(msg="请输入正确的邮箱~~~")
 
     if login_pwd is None or len(login_pwd) < 1:
         return ops_renderErrJSON(msg="请输入正确的登陆密码，并且不能小于6个字符~~")
@@ -38,6 +42,7 @@ def reg():
     model_user = User()
     model_user.login_name = login_name
     model_user.nickname = nick_name
+    model_user.email = email
     model_user.login_salt = UserService.geneSalt(8)
     model_user.login_pwd = UserService.genePwd(login_pwd, model_user.login_salt)
     model_user.created_time = model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
@@ -46,7 +51,7 @@ def reg():
     db.session.commit()
     response = make_response(ops_renderJSON(msg="注册成功"))
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
-                        value="%s#%s" % (UserService.geneAuthCode(model_user), model_user.UserID),
+                        value="%s#%s" % (UserService.geneAuthCode(model_user), model_user.id),
                         max_age=60 * 60 * 24 * 120)
     return response
 
@@ -74,7 +79,7 @@ def login():
         return ops_renderErrJSON(msg="账号已被禁用，请联系管理员解决~~")
     response = make_response(ops_renderJSON(msg="登陆成功"))
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
-                        value="%s#%s" % (UserService.geneAuthCode(user_info), user_info.UserID),
+                        value="%s#%s" % (UserService.geneAuthCode(user_info), user_info.id),
                         max_age=60 * 60 * 24 * 120)
     return response
 
@@ -94,3 +99,31 @@ def forgot():
 @member_page.route("/reset")
 def reset():
     return ops_render("/member/reset.html")
+
+
+@member_page.route("/info", methods=["POST", "GET"])
+def info():
+    if request.method == "GET":
+        return ops_render("/member/info.html")
+    req = request.values
+    gender = req["gender"] if "gender" in req else ""
+    age = int(req["age"]) if "age" in req else -1
+    occupation = req["occupation"] if "occupation" in req else ""
+    occ_list = ["Student", "Teacher", "Engineer", "Researcher", "Doctor", "Policeman", "Others"]
+    # 因为前端可能会被穿透，所以后端要再验证一遍
+    if gender is None or len(gender) < 1 or (gender != "Female" and gender != "Male"):
+        return ops_renderErrJSON(msg="请输入正确的性别~~~")
+
+    if age > 100 or age < 0:
+        return ops_renderErrJSON(msg="请输入正确的年龄~~~")
+
+    if occupation is None or len(occupation) < 1 or occupation not in occ_list:
+        return ops_renderErrJSON(msg="请输入正确的职业~~~")
+
+    model_user = User.query.filter_by(login_name=g.current_user.login_name).first()
+    model_user.gender = gender
+    model_user.age = age
+    model_user.occupation = occupation
+    db.session.add(model_user)
+    db.session.commit()
+    return ops_renderJSON(msg="信息完善成功~~")

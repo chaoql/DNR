@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+    <section class="login first grey">
+        <div class="container">
+            <div class="box-wrapper">
+                <div class="box box-border">
+                    <div class="box-body imp-wrap">
+                        <h4>Improve Information</h4>
+                        <div>
+                            <div class="form-group">
+                                <label>Gender &nbsp &nbsp &nbsp &nbsp</label>
+                                <input name="gender" type="text" list="gender-list" class="form-control" placeholder="Please select your gender~~">
+                                <datalist id="gender-list">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </datalist>
+                            </div>
+                            <div class="form-group">
+                                <label>Age</label>
+                                <input name="age" type="number" class="form-control" placeholder="Please input your age~~">
+                            </div>
+                            <div class="form-group">
+                                <label>Occupation</label>
+                                <input type="text" name="occupation" class="form-control" list="occupation-list" placeholder="Please select your occupation~~">
+                                <datalist id="occupation-list">
+                                    <option>Student</option>
+                                    <option>Teacher</option>
+                                    <option>Engineer</option>
+                                    <option>Researcher</option>
+                                    <option>Doctor</option>
+                                    <option>Policeman</option>
+                                    <option>Others</option>
+                                </datalist>
+                            </div>
+                            <div class="form-group text-right">
+                                <button class="btn btn-primary btn-block do-imp">Improve</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block js %}
+    <script src="{{ buildStaticUrl('/js/member/info.js') }}"></script>
+{% endblock %}

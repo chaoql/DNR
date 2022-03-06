@@ -96,9 +96,30 @@ def forgot():
     return ops_render("/member/forgot.html")
 
 
-@member_page.route("/reset")
+@member_page.route("/reset", methods=["POST", "GET"])
 def reset():
-    return ops_render("/member/reset.html")
+    if request.method == "GET":
+        return ops_render("/member/reset.html")
+    req = request.values
+    old_pwd = req["old_pwd"] if "old_pwd" in req else ""
+    new_pwd = req["new_pwd"] if "new_pwd" in req else -1
+    new_pwd2 = req["new_pwd2"] if "new_pwd2" in req else ""
+    # 因为前端可能会被穿透，所以后端要再验证一遍
+    if old_pwd is None or len(old_pwd) < 6:
+        return ops_renderErrJSON(msg="请输入正确的旧登陆密码~~")
+    if new_pwd is None or len(new_pwd) < 6:
+        return ops_renderErrJSON(msg="请输入正确的新登陆密码，并且不能小于6个字符~~")
+    if new_pwd2 is None or len(new_pwd2) < 6 or new_pwd != new_pwd2:
+        return ops_renderErrJSON(msg="请输入正确的确认新登陆密码~~")
+    tmp_pwd = UserService.genePwd(old_pwd, g.current_user.login_salt)
+    model_user = User.query.filter_by(login_pwd=tmp_pwd).first()
+    if model_user:
+        model_user.login_pwd = UserService.genePwd(new_pwd, g.current_user.login_salt)
+        db.session.add(model_user)
+        db.session.commit()
+        return ops_renderJSON(msg="密码修改成功~~")
+    else:
+        return ops_renderErrJSON(msg="密码输入错误~~")
 
 
 @member_page.route("/info", methods=["POST", "GET"])

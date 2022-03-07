@@ -15,13 +15,17 @@ class UrlManager(object):
         return "%s%s" % (config_domain['www'], path)
 
     @staticmethod
-    def buildStaticUrl(path):
+    def buildStaticUrl(path, flag="v"):
         """
         静态相对地址转化为绝对地址
+        :param flag:
         :param path:
         :return:
         """
-        path = "/static" + path + "?ver=" + UrlManager.getReleaseVersion()
+        if flag == "v":
+            path = "/static" + path + "?ver=" + UrlManager.getReleaseVersion()
+        else:
+            path = "/static" + path
         return UrlManager.buildUrl(path)
 
     @staticmethod

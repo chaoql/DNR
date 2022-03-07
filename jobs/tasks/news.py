@@ -48,6 +48,8 @@ class JobTask:
             for item in items_data:  # 单电影信息循环
                 tmp_content = self.getHttpContent(item["link"])  # 单个电影详情页面的Content
                 self.parseInfo(tmp_content, item)
+                break
+            break
 
     def parseInfo(self, content, item):
         """

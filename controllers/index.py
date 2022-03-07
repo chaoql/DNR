@@ -10,4 +10,10 @@ index_page = Blueprint("index_page", __name__)
 
 @index_page.route("/")
 def index():
-    return ops_render("index.html")  # 加载current_user对象
+    News_list = News.query.order_by(News.view_counter.desc(), News.id.desc())
+    return ops_render("index.html", {"newsL": News_list[5:10], "swiper": News_list[0:5]})
+
+
+@index_page.route("/single")
+def sigal():
+    return ops_render("single.html")

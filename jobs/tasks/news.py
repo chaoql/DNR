@@ -1,6 +1,7 @@
 import hashlib
 import traceback
 import time
+import urllib
 from urllib.parse import urlparse
 from selenium import webdriver
 from common.models.news import News
@@ -23,7 +24,7 @@ class JobTask:
         self.source = "puffpost"
         self.urls = ["https://new.qq.com/ch/antip/", "https://new.qq.com/ch/ent/", "https://new.qq.com/ch/milite/",
                      "https://new.qq.com/ch/world/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/ "]
-        self.a_urls = ["https://new.qq.com/ch/milite/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/ "]
+        self.a_urls = ["https://new.qq.com/ch/antip/", "https://new.qq.com/ch/ent/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/"]
         self.b_urls = ["https://new.qq.com/ch/milite/", "https://new.qq.com/ch/world/"]
 
     def run(self, params):
@@ -40,16 +41,12 @@ class JobTask:
             genre = "a"
             if url in self.b_urls:
                 genre = "b"
-            else:
-                continue
             app.logger.warning("get list: " + url)
             content = self.getHttpContent(url, flag="list")  # 线上获取content操作时，必须关闭vpn
             items_data = self.parseList(content, url, genre)  # 解析界面  获得[{单一电影的名字、详情网址}{...}{...}]型的信息
             for item in items_data:  # 单电影信息循环
                 tmp_content = self.getHttpContent(item["link"])  # 单个电影详情页面的Content
                 self.parseInfo(tmp_content, item)
-                break
-            break
 
     def parseInfo(self, content, item):
         """
@@ -68,6 +65,7 @@ class JobTask:
             if item["text"] == "":
                 app.logger.warning("网站无文本信息，跳过...")
                 return False
+            self.download_pics(item)
             app.logger.warning(item["text"])
             tmp_year = soup.select("div.year.through span")[0].getText()
             tmp_month_day = soup.select("div.md")[0].getText().replace("/", "-")
@@ -75,9 +73,11 @@ class JobTask:
             tmp_date = tmp_year + "-" + tmp_month_day + " " + tmp_time
             item["date"] = tmp_date
             tmp_news_info = News.query.filter_by(hash=item["hash"]).first()
+            item["view_counter"] = 0
             if tmp_news_info:
                 return False
             tmp_model_info = News(**item)
+
             db.session.add(tmp_model_info)
             db.session.commit()
         except Exception as e:
@@ -92,7 +92,6 @@ class JobTask:
         :return: 包含电影名称和电影详情网址字典的列表
         """
         app.logger.warning("正在解析新闻列表页面的content...")
-        # app.logger.warning(content)
         data = []
         url_info = urlparse(url=url)
         url_domain = url_info[0] + "://" + url_info[1]
@@ -149,3 +148,9 @@ class JobTask:
         except Exception as e:
             traceback.print_exc()
             return None
+
+    def download_pics(self, item):
+        f = open('E:/毕业设计/dnr-bisher/static/images/news/' + str(item["hash"]) + ".jpg", 'wb')
+        f.write((urllib.request.urlopen(item["photo"])).read())
+        print("图片下载：" + item["photo"])
+        f.close()

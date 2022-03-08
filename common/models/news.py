@@ -15,4 +15,4 @@ class News(db.Model):
     photo = db.Column(db.String(255, 'utf8_bin'), nullable=False)
     hash = db.Column(db.String(255, 'utf8_bin'), primary_key=True, nullable=False)
     view_counter = db.Column(db.Integer, nullable=False)
-    love = db.Column(db.Integer, nullable=False)
+    hot = db.Column(db.Integer, nullable=False)

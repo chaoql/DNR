@@ -10,7 +10,7 @@ import flask
 
 # web server命令管理 (自定义启动命令)
 # 运行命令：python manager.py runserver
-manager.add_command("runserver", Server(host="0.0.0.0", use_debugger=True, use_reloader=False, port=8080))
+manager.add_command("runserver", Server(host="localhost", use_debugger=True, use_reloader=False, port=8080))
 
 # 下载原始数据，运行命令：python manager.py downloadData
 manager.add_command("downloadData", downloadData)

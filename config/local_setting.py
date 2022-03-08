@@ -10,7 +10,7 @@ SQLALCHEMY_DATABASE_URI = "mysql://root:cql666@localhost:3306/news_recommendatio
 '''
 # 手机热点或断网
 DOMAIN = {
-    'www': "http://192.168.223.166:8080/"
+    'www': "http://localhost:8080/"
 }
 
 # 家里wifi

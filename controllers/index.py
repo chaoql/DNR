@@ -17,8 +17,12 @@ def index():
 
 
 @index_page.route("/single")
-def sigal():
-    return ops_render("single.html")
+def single():
+    req = request.values
+    app.logger.warning("============single============")
+    app.logger.warning(req)
+    model_news = News.query.filter_by(id=req['id']).first()
+    return ops_render("single.html", {'news': model_news, "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
 
 
 @index_page.route("/search", methods=["POST", "GET"])

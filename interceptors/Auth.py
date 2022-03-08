@@ -22,7 +22,8 @@ def before_request():
         if request.path.endswith("/member/login") or request.path.endswith("/member/reg") \
                 or request.path.endswith("/member/forgot"):
             return
-        if request.path == '/' or request.path == '/member/info':
+        if request.path == '/' or request.path == '/member/info' or request.path == '/member/logout'\
+                or request.path == '/member/reset' or request.path == '/single' or request.path == '/rearch':
             return redirect(UrlManager.buildUrl("member/login"))
     return
 

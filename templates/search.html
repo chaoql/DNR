@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block content %}
+    <section class="search">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="search-result">
+                        Search results for keyword "hello" found in {{ count }} posts.
+                    </div>
+                    <div class="row">
+                        {% for item in newsl %}
+                        <article class="col-md-12 article-list">
+                            <div class="inner">
+                                <figure>
+                                    <a href="single.html">
+                                        <img src="{{ pic_path ~ item.hash~ ".jpg" }}" height="195" width="300">
+                                    </a>
+                                </figure>
+                                <div class="details">
+                                    <div class="detail">
+                                        <div class="category">
+                                            <a href="#">{{ item.genres }}</a>
+                                        </div>
+                                        <time>{{ item.date}}</time>
+                                    </div>
+                                    <h1><a href="single.html">{{ item.title }}</a></h1>
+                                    <p>{{ (item.text | truncate_html(length=150)) ~ '...' }}</p>
+                                    <footer>
+                                        <a class="btn btn-primary more" href="single.html">
+                                            <div>More</div>
+                                            <div><i class="ion-ios-arrow-thin-right"></i></div>
+                                        </a>
+                                    </footer>
+                                </div>
+                            </div>
+                        </article>
+                        {% endfor %}
+                        <div class="col-md-12 text-center">
+                            <ul class="pagination">
+                                <li class="prev"><a href="#"><i class="ion-ios-arrow-left"></i></a></li>
+                                <li class="active"><a href="#">1</a></li>
+                                <li><a href="#">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#">...</a></li>
+                                <li><a href="#">97</a></li>
+                                <li class="next"><a href="#"><i class="ion-ios-arrow-right"></i></a></li>
+                            </ul>
+                            <div class="pagination-help-text">
+                                Showing 8 results of 776 &mdash; Page 1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -5,6 +5,7 @@ from common.libs.FLHelper.UrlManager import UrlManager
 from common.libs.FLHelper.DateHelper import getCurrentTime
 from common.models.user import User
 from common.libs.FLHelper.UserService import UserService
+from common.libs.FLHelper.MailService import send_reset_pwd_email
 
 member_page = Blueprint("member_page", __name__)
 
@@ -91,9 +92,48 @@ def logout():
     return response
 
 
-@member_page.route("/forgot")
+@member_page.route("/forgot", methods=["POST", "GET"])
 def forgot():
-    return ops_render("/member/forgot.html")
+    if request.method == "GET":
+        return ops_render("/member/forgot.html")
+    req = request.values
+    email = req["email"] if "email" in req else ""
+    if email is None or len(email) < 1:
+        return ops_renderErrJSON(msg="请输入正确的邮箱~~")
+    model_user = User.query.filter_by(email=email).first()
+    emails = [email]
+    if model_user:
+        send_reset_pwd_email(model_user, re=emails)
+    else:
+        return ops_renderErrJSON(msg="请输入正确的邮箱~~")
+    return ops_renderJSON(msg="请注意查收邮件并操作~~")
+
+
+@member_page.route("/f_reset", methods=["POST", "GET"])
+def f_reset():
+    if request.method == "GET":
+        return ops_render("/member/f_reset.html")
+    req = request.values
+    model_user = User.verify_token(req["token"])
+    new_pwd = req["new_pwd"] if "new_pwd" in req else ""
+    new_pwd2 = req["new_pwd2"] if "new_pwd2" in req else ""
+
+    app.logger.warning("===============f_reset==============")
+    app.logger.warning(req)
+    app.logger.warning(model_user)
+    app.logger.warning("------------------------------------")
+    # 因为前端可能会被穿透，所以后端要再验证一遍
+    if new_pwd is None or len(new_pwd) < 6:
+        return ops_renderErrJSON(msg="请输入正确的新登陆密码，并且不能小于6个字符~~")
+    if new_pwd2 is None or len(new_pwd2) < 6 or new_pwd != new_pwd2:
+        return ops_renderErrJSON(msg="请输入正确的确认新登陆密码~~")
+    if model_user:
+        model_user.login_pwd = UserService.genePwd(new_pwd, model_user.login_salt)
+        db.session.add(model_user)
+        db.session.commit()
+        return ops_renderJSON(msg="密码重置成功~~")
+    else:
+        return ops_renderErrJSON(msg="密码重置失败~~")
 
 
 @member_page.route("/reset", methods=["POST", "GET"])
@@ -102,7 +142,7 @@ def reset():
         return ops_render("/member/reset.html")
     req = request.values
     old_pwd = req["old_pwd"] if "old_pwd" in req else ""
-    new_pwd = req["new_pwd"] if "new_pwd" in req else -1
+    new_pwd = req["new_pwd"] if "new_pwd" in req else ""
     new_pwd2 = req["new_pwd2"] if "new_pwd2" in req else ""
     # 因为前端可能会被穿透，所以后端要再验证一遍
     if old_pwd is None or len(old_pwd) < 6:
@@ -148,4 +188,3 @@ def info():
     db.session.add(model_user)
     db.session.commit()
     return ops_renderJSON(msg="信息完善成功~~")
-

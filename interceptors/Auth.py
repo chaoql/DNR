@@ -12,7 +12,7 @@ from common.libs.FLHelper.UserService import UserService
 
 @app.before_request
 def before_request():
-    app.logger.info("--------before--------")
+    # app.logger.info("--------before--------")
     user_info = check_login()
     g.current_user = None
     if user_info:
@@ -29,7 +29,7 @@ def before_request():
 
 @app.after_request
 def after_request(response):
-    app.logger.info("--------after--------")
+    # app.logger.info("--------after--------")
     return response
 
 

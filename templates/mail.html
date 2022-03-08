@@ -1,0 +1,11 @@
+<p>Dear {{ user.login_name }}</p>
+<p>To reset your password
+    <a href="{{ buildUrl("member/f_reset")~'?token='~token }}">Click me</a>
+</p>
+<p>Alternatively，you can paste the following 1ink in your browser's address bar:</p>
+<p>{{ buildUrl("member/f_reset")~'?token='~token }}</p>
+<p>
+If you have not requested a password reset simply ignore this message.
+</p>
+<p>Sincerely,</p>
+<p>Chaoql</p>

@@ -1,6 +1,9 @@
-from flask import Blueprint, request, redirect
+from flask import Blueprint, request, redirect, g
 from application import db
 from common.models.news import News
+from common.models.view import View
+from common.models.user import User
+from common.models.fl_data import FlDatum
 from common.libs.FLHelper.Helper import ops_render, iPageNation, ops_renderJSON
 from common.libs.FLHelper.UrlManager import UrlManager
 from sqlalchemy.sql.expression import func
@@ -35,8 +38,37 @@ def index():
 def single():
     req = request.values
     model_news = News.query.filter_by(id=req['id']).first()
-    return ops_render("single.html",
-                      {'news': model_news, "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
+    model_news.view_counter += 1
+    model_view = View.query.filter_by(userID=g.current_user.id, newsID=req['id']).first()
+    if model_view:
+        model_view.view_counter += 1
+    else:
+        model_view = View()
+        model_view.view_counter = 1
+        model_view.userID = g.current_user.id
+        model_view.newsID = req['id']
+    model_fl = FlDatum.query.filter_by(userID=g.current_user.id, newsID=req['id']).first()
+    if model_fl:
+        model_fl.view_counter += 1
+    else:
+        model_fl = FlDatum()
+        model_fl.view_counter = 1
+        model_fl.userID = g.current_user.id
+        model_fl.newsID = req['id']
+        model_fl_news = News.query.filter_by(id=req['id']).first()
+        model_fl.text = model_fl_news.text
+        model_fl.genre = model_fl_news.genres
+        model_fl.author = model_fl_news.authors
+        model_fl.news_time = model_fl_news.date
+        model_fl_user = User.query.filter_by(id=g.current_user.id).first()
+        model_fl.user_gender = model_fl_user.gender
+        model_fl.user_age = model_fl_user.age
+    db.session.add(model_fl)
+    db.session.add(model_news)
+    db.session.add(model_view)
+    db.session.commit()
+    return ops_render("single.html", {'news': model_news,
+                                      "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
 
 
 @index_page.route("/search", methods=["POST", "GET"])

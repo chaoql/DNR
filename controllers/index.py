@@ -18,10 +18,13 @@ def index():
     req = request.values
     if "p" in req and req["p"]:
         page = int(req["p"])
-    News_list = News.query.filter_by(hot=0).order_by(News.view_counter.desc(), News.id.desc())
-    Hot_list = News.query.filter_by(hot=1).all()
+    News_list = News.query.order_by(News.view_counter.desc(), News.id.desc()).all()
+    Hot_list = News_list[0:5]
+    Nomal_list = News_list[5:]
+    # News_list = News.query.filter_by(hot=0).order_by(News.view_counter.desc(), News.id.desc())
+    # Hot_list = News.query.filter_by(hot=1).all()
     page_params = {
-        "total_count": News_list.count(),
+        "total_count": len(Nomal_list),
         "page_size": 10,
         "page": page,
         "url": "?"
@@ -29,7 +32,7 @@ def index():
     pages = iPageNation(page_params)
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
-    list_news = News_list[offset:limit]
+    list_news = Nomal_list[offset:limit]
     return ops_render("index.html", {"newsL": list_news, "swiper": Hot_list, "pages": pages,
                                      "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
 

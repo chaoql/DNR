@@ -31,12 +31,12 @@
     <nav class="menu">
         <div class="container">
             <div class="row"></div>
-            <div class="col-md-2">
+            <div class="col-md-2 col-sm-2 col-xs-2">
                 <a href="{{ buildUrl("/") }}">
                     <h3>DNR</h3>
                 </a>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-7 col-sm-7 col-xs-7">
                 <form class="search" method="post" action="{{ buildUrl("search") }}">
                     <div class="form-group">
                         <div class="input-group" style="margin-top:8px;">
@@ -48,7 +48,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-3 text-right">
+            <div class="col-md-3 col-sm-3 col-xs-3 text-right">
                 <ul class="nav-icons">
                     {% if current_user %}
                         <li><a href="#">{{ current_user.login_name }}</a>

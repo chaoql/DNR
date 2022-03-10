@@ -21,8 +21,6 @@ def index():
     News_list = News.query.order_by(News.view_counter.desc(), News.id.desc()).all()
     Hot_list = News_list[0:5]
     Nomal_list = News_list[5:]
-    # News_list = News.query.filter_by(hot=0).order_by(News.view_counter.desc(), News.id.desc())
-    # Hot_list = News.query.filter_by(hot=1).all()
     page_params = {
         "total_count": len(Nomal_list),
         "page_size": 10,

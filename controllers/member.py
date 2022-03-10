@@ -51,9 +51,6 @@ def reg():
     db.session.add(model_user)
     db.session.commit()
     response = make_response(ops_renderJSON(msg="注册成功"))
-    response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
-                        value="%s#%s" % (UserService.geneAuthCode(model_user), model_user.id),
-                        max_age=60 * 60 * 24 * 120)
     return response
 
 
@@ -187,4 +184,8 @@ def info():
     model_user.occupation = occupation
     db.session.add(model_user)
     db.session.commit()
-    return ops_renderJSON(msg="信息完善成功~~")
+    response = make_response(msg="信息完善成功~~")
+    response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
+                        value="%s#%s" % (UserService.geneAuthCode(model_user), model_user.id),
+                        max_age=60 * 60 * 24 * 120)
+    return response

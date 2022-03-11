@@ -102,3 +102,25 @@ def search():
     list_news = model_news[offset:limit]
     return ops_render("search.html", {'str': search_str, 'newsl': list_news, "pages": pages,
                                       "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
+
+
+@index_page.route("/manage")
+def manage():
+    req = request.values
+    page = 1
+    if "p" in req and req["p"]:
+        page = int(req["p"])
+    query = User.query.filter_by(power=0).all()
+    page_params = {
+        "total_count": len(query),
+        "page_size": 24,
+        "page": page,
+        "url": "/manage?"
+    }
+    pages = iPageNation(page_params)
+    # 0-23, 24-47, 48-71
+    offset = (page - 1) * page_params["page_size"]
+    limit = page * page_params["page_size"]
+    query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
+    userl = query[offset:limit]
+    return ops_render("userManager.html", {"data": userl, "pages": pages})  # 加载current_user对象

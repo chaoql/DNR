@@ -19,6 +19,7 @@ class User(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False)
     created_time = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.Integer, nullable=False)
+    power = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(255, 'utf8_bin'), nullable=False)
 
     def get_token(self, expires_in=600):

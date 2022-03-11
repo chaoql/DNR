@@ -40,17 +40,18 @@ def reg():
     if user_info:
         return ops_renderErrJSON(msg="登陆用户名已被占用，请换一个~~")
 
-    model_user = User()
-    model_user.login_name = login_name
-    model_user.nickname = nick_name
-    model_user.email = email
-    model_user.login_salt = UserService.geneSalt(8)
-    model_user.login_pwd = UserService.genePwd(login_pwd, model_user.login_salt)
-    model_user.created_time = model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
-    model_user.status = 1
-    db.session.add(model_user)
-    db.session.commit()
-    response = make_response(ops_renderJSON(msg="注册成功"))
+    global reg_model_user
+    reg_model_user = User()
+    reg_model_user.login_name = login_name
+    reg_model_user.nickname = nick_name
+    reg_model_user.email = email
+    reg_model_user.login_salt = UserService.geneSalt(8)
+    reg_model_user.login_pwd = UserService.genePwd(login_pwd, reg_model_user.login_salt)
+    reg_model_user.created_time = reg_model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
+    reg_model_user.status = 1
+    # db.session.add(model_user)
+    # db.session.commit()
+    response = make_response(ops_renderJSON(msg="注册成功(1/2),请继续完善信息~~~"))
     return response
 
 
@@ -178,15 +179,16 @@ def info():
     if occupation is None or len(occupation) < 1 or occupation not in occ_list:
         return ops_renderErrJSON(msg="请输入正确的职业~~~")
 
-    model_user = User.query.filter_by(login_name=g.current_user.login_name).first()
-    model_user.gender = gender
-    model_user.age = age
-    model_user.occupation = occupation
-    db.session.add(model_user)
+    # model_user = User.query.filter_by(login_name=g.current_user.login_name).first()
+    reg_model_user.gender = gender
+    reg_model_user.age = age
+    reg_model_user.occupation = occupation
+    reg_model_user.power = 0  # 0为普通用户，1为管理员
+    db.session.add(reg_model_user)
     db.session.commit()
-    response = make_response(ops_renderJSON(msg="信息完善成功~~"))
+    response = make_response(ops_renderJSON(msg="注册成功(2/2)~~"))
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
-                        value="%s#%s" % (UserService.geneAuthCode(model_user), model_user.id),
+                        value="%s#%s" % (UserService.geneAuthCode(reg_model_user), reg_model_user.id),
                         max_age=60 * 60 * 24 * 120)
     return response
 

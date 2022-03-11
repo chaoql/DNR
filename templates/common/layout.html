@@ -54,12 +54,12 @@
                         <li><a href="#">{{ current_user.login_name }}</a>
                             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
                                 {% if current_user.power == 0 %}
-                                    <li><a href="{{ buildUrl('/member/profile') }}">Your profile</a></li>
-                                    <li><a href="{{ buildUrl('/member/reset') }}">Reset Password</a></li>
+                                    <li><a href="{{ buildUrl('member/profile') }}">Your profile</a></li>
+                                    <li><a href="{{ buildUrl('member/reset') }}">Reset Password</a></li>
                                 {% else %}
-                                    <li><a href="{{ buildUrl('/manage') }}">Manage User</a></li>
+                                    <li><a href="{{ buildUrl('manager/') }}">Manage User</a></li>
                                 {% endif %}
-                                <li><a href="{{ buildUrl('/member/logout') }}">Logout</a></li>
+                                <li><a href="{{ buildUrl('member/logout') }}">Logout</a></li>
                             </ul>
                         </li>
                     {% endif %}

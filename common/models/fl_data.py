@@ -14,4 +14,5 @@ class FlDatum(db.Model):
     text = db.Column(db.String(collation='utf8_bin'), nullable=False)
     user_age = db.Column(db.Integer, nullable=False)
     user_gender = db.Column(db.String(255, 'utf8_bin'), nullable=False)
+    title = db.Column(db.String(255, 'utf8_bin'), nullable=False)
     view_counter = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())

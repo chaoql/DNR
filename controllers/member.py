@@ -184,8 +184,51 @@ def info():
     model_user.occupation = occupation
     db.session.add(model_user)
     db.session.commit()
-    response = make_response(msg="信息完善成功~~")
+    response = make_response(ops_renderJSON(msg="信息完善成功~~"))
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
                         value="%s#%s" % (UserService.geneAuthCode(model_user), model_user.id),
                         max_age=60 * 60 * 24 * 120)
     return response
+
+
+@member_page.route("/profile")
+def profile():
+    return ops_render("member/profile.html", {'userl': g.current_user})
+
+
+@member_page.route("/commit_pro", methods=["POST", "GET"])
+def commit_pro():
+    req = request.values
+    nick_name = req["nick_name"] if "nick_name" in req else ""
+    login_name = req["login_name"] if "login_name" in req else ""
+    gender = req["gender"] if "gender" in req else ""
+    age = int(req["age"]) if "age" in req else -1
+    occupation = req["occupation"] if "occupation" in req else ""
+    occ_list = ["Student", "Teacher", "Engineer", "Researcher", "Doctor", "Policeman", "Others"]
+    if nick_name is None or len(nick_name) < 1:
+        return ops_renderErrJSON(msg="请输入正确的昵称~~~")
+
+    if login_name is None or len(login_name) < 1:
+        return ops_renderErrJSON(msg="请输入正确的用户名~~~")
+
+    if gender is None or len(gender) < 1 or (gender != "Female" and gender != "Male"):
+        return ops_renderErrJSON(msg="请输入正确的性别~~~")
+
+    if age > 100 or age < 0:
+        return ops_renderErrJSON(msg="请输入正确的年龄~~~")
+
+    if occupation is None or len(occupation) < 1 or occupation not in occ_list:
+        return ops_renderErrJSON(msg="请输入正确的职业~~~")
+    if nick_name == g.current_user.nickname and login_name == g.current_user.login_name and gender == g.current_user.gender \
+            and age == g.current_user.age and occupation == g.current_user.occupation:
+        return ops_renderJSON(msg="信息未变动~~")
+    else:
+        model_user = User.query.filter_by(id=g.current_user.id).first()
+        model_user.nickname = nick_name
+        model_user.login_name = login_name
+        model_user.gender = gender
+        model_user.age = age
+        model_user.occupation = occupation
+        db.session.add(model_user)
+        db.session.commit()
+        return ops_renderJSON(msg="信息修改成功~~")

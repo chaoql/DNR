@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+    <section class="login first grey">
+        <div class="container">
+            <div class="box-wrapper">
+                <div class="box box-border">
+                    <div class="box-body pro-wrap">
+                        <h4>Your Profile</h4>
+                        <div>
+                            <div class="form-group">
+                                <label>Nickname</label>
+                                <input type="text" name="nickname" class="form-control" value="{{ userl.nickname }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Loginname</label>
+                                <input type="text" name="login_name" class="form-control"
+                                       value="{{ userl.login_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label>gender</label>
+                                <input name="gender" type="text" list="gender-list" class="form-control" placeholder="{{ userl.gender }}">
+                                <datalist id="gender-list">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </datalist>
+                            </div>
+                            <div class="form-group">
+                                <label>age</label>
+                                <input type="text" name="age" class="form-control" value="{{ userl.age }}">
+                            </div>
+                            <div class="form-group">
+                                <label>occupation</label>
+                                <input type="text" name="occupation" class="form-control" list="occupation-list" placeholder="{{ userl.occupation }}">
+                                <datalist id="occupation-list">
+                                    <option>Student</option>
+                                    <option>Teacher</option>
+                                    <option>Engineer</option>
+                                    <option>Researcher</option>
+                                    <option>Doctor</option>
+                                    <option>Policeman</option>
+                                    <option>Others</option>
+                                </datalist>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="{{ buildUrl("/") }}">
+                                        <button class="btn btn-primary btn-block">
+                                            Return
+                                        </button>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <button class="btn btn-primary btn-block do-pro">
+                                        Commit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block js %}
+    <script src="{{ buildStaticUrl("/js/member/profile.js") }}"></script>
+{% endblock %}

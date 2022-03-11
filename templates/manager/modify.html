@@ -1,0 +1,94 @@
+{% extends "common/m_layout.html" %}
+{% block content %}
+    {% if data %}
+        <div class="modify-wrap">
+            <table class="table table-hover" style="text-align:center">
+                <thead style="text-align:center">
+                <tr>
+                    <th style="text-align:center">Nickname</th>
+                    <th style="text-align:center">Loginname</th>
+                    <th style="text-align:center">Gneder</th>
+                    <th style="text-align:center">Age</th>
+                    <th style="text-align:center">Occupation</th>
+                    <th style="text-align:center">status</th>
+                    <th style="text-align:center">operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data %}
+                    <tr>
+                        {% if item.id == spid %}
+                            <td><input type="text" name="nickname" value="{{ item.nickname }}"></td>
+                            <td>
+                                <input type="text" readonly="readonly" name="login_name" value="{{ item.login_name }}">
+                            </td>
+                            <td>
+                                <input type="text" name="gender" list="gender-list" placeholder="{{ item.gender }}">
+                                <datalist id="gender-list">
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                </datalist>
+                            </td>
+                            <td><input type="text" name="age" value="{{ item.age }}"></td>
+                            <td>
+                                <input type="text" name="occupation" list="occupation-list"
+                                       placeholder="{{ item.occupation }}">
+                                <datalist id="occupation-list">
+                                    <option>Student</option>
+                                    <option>Teacher</option>
+                                    <option>Engineer</option>
+                                    <option>Researcher</option>
+                                    <option>Doctor</option>
+                                    <option>Policeman</option>
+                                    <option>Others</option>
+                                </datalist>
+                            </td>
+                            {% if item.status == 0 %}
+                                <td class="td-status">
+                                    <span class="label label-danger">not using</span>
+                                </td>
+                            {% else %}
+                                <td class="td-status">
+                                    <span class="label label-success">using</span>
+                                </td>
+                            {% endif %}
+                            <td>
+                                <button class="label label-primary do-modify">
+                                    commit
+                                </button>
+                            </td>
+                        {% else %}
+                            <td>{{ item.nickname }}</td>
+                            <td>{{ item.login_name }}</td>
+                            <td>{{ item.gender }}</td>
+                            <td>{{ item.age }}</td>
+                            <td>{{ item.occupation }}</td>
+                            {% if item.status == 0 %}
+                                <td class="td-status">
+                                    <span class="label label-danger">not using</span>
+                                </td>
+                            {% else %}
+                                <td class="td-status">
+                                    <span class="label label-success">using</span>
+                                </td>
+                            {% endif %}
+                            <td>
+                                <a href="{{ buildUrl('manager/modify')~'?id='~item.id }}">
+                                    <span class="label label-primary">modify</span>
+                                </a>
+                                <a href="{{ buildUrl('manager/delete')~'?id='~item.id }}">
+                                    <span class="label label-danger">delete</span>
+                                </a>
+                            </td>
+                        {% endif %}
+
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block js %}
+    <script src="{{ buildStaticUrl("/js/manager/modify.js") }}"></script>
+{% endblock %}

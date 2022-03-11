@@ -202,7 +202,7 @@ def profile():
 def commit_pro():
     req = request.values
     nick_name = req["nick_name"] if "nick_name" in req else ""
-    login_name = req["login_name"] if "login_name" in req else ""
+    # login_name = req["login_name"] if "login_name" in req else ""
     gender = req["gender"] if "gender" in req else ""
     age = int(req["age"]) if "age" in req else -1
     occupation = req["occupation"] if "occupation" in req else ""
@@ -210,8 +210,8 @@ def commit_pro():
     if nick_name is None or len(nick_name) < 1:
         return ops_renderErrJSON(msg="请输入正确的昵称~~~")
 
-    if login_name is None or len(login_name) < 1:
-        return ops_renderErrJSON(msg="请输入正确的用户名~~~")
+    # if login_name is None or len(login_name) < 1:
+    #     return ops_renderErrJSON(msg="请输入正确的用户名~~~")
 
     if gender is None or len(gender) < 1 or (gender != "Female" and gender != "Male"):
         return ops_renderErrJSON(msg="请输入正确的性别~~~")
@@ -221,13 +221,13 @@ def commit_pro():
 
     if occupation is None or len(occupation) < 1 or occupation not in occ_list:
         return ops_renderErrJSON(msg="请输入正确的职业~~~")
-    if nick_name == g.current_user.nickname and login_name == g.current_user.login_name and gender == g.current_user.gender \
+    if nick_name == g.current_user.nickname and gender == g.current_user.gender \
             and age == g.current_user.age and occupation == g.current_user.occupation:
         return ops_renderJSON(msg="信息未变动~~")
     else:
         model_user = User.query.filter_by(id=g.current_user.id).first()
         model_user.nickname = nick_name
-        model_user.login_name = login_name
+        # model_user.login_name = login_name
         model_user.gender = gender
         model_user.age = age
         model_user.occupation = occupation

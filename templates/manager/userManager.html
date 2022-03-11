@@ -31,7 +31,7 @@
                         </td>
                     {% endif %}
                     <td>
-                        <a href="{{ buildUrl('/') }}">
+                        <a href="{{ buildUrl('manager/modify')~'?id='~item.id }}">
                             <span class="label label-primary">modify</span>
                         </a>
                         <a href="{{ buildUrl('manager/delete')~'?id='~item.id }}">

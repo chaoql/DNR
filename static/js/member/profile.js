@@ -11,7 +11,6 @@ var member_profile_ops = {
                 return;
             }
             const nick_name = $(".pro-wrap input[name=nickname]").val();
-            // const login_name = $(".pro-wrap input[name=login_name]").val();
             const gender = $(".pro-wrap input[name=gender]").val();
             const age = $(".pro-wrap input[name=age]").val();
             const occupation = $(".pro-wrap input[name=occupation]").val();
@@ -21,12 +20,8 @@ var member_profile_ops = {
                 common_ops.alert("请输入正确的昵称~~~");
                 return;
             }
-            // if (login_name === undefined || login_name.length < 1) {
-            //     common_ops.alert("请输入正确的登陆用户名~~~");
-            //     return;
-            // }
-            if (gender === undefined || gender.length < 1 || (gender !== "Male" && gender !== "Female")) {
-                common_ops.alert("请选择正确的性别~~~");
+            if (gender.length >= 1 && gender !== "Male" && gender !== "Female") {
+                common_ops.alert("请选择正确的性别~~~1");
                 return;
             }
             if (age === undefined || age.length < 1 || (age > 100 || age < 0)) {
@@ -37,7 +32,7 @@ var member_profile_ops = {
                 if (occupation === occ_list[i])
                     occ_flag = 1;
             }
-            if (occupation === undefined || occupation.length < 1 || (occ_flag === 0)) {
+            if (occupation.length >= 1 && occ_flag === 0) {
                 common_ops.alert("请选择正确的职业~~~");
                 return;
             }

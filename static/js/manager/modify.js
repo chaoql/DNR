@@ -21,8 +21,8 @@ var member_modify_ops = {
                 common_ops.alert("请输入正确的昵称~~~");
                 return;
             }
-            if (gender !== undefined && gender !== "Male" && gender !== "Female") {
-                common_ops.alert("请选择正确的性别~~~");
+            if (gender.length >= 1 && gender !== "Male" && gender !== "Female") {
+                common_ops.alert("请选择正确的性别~~~1");
                 return;
             }
             if (age === undefined || age.length < 1 || (age > 100 || age < 0)) {
@@ -33,7 +33,7 @@ var member_modify_ops = {
                 if (occupation === occ_list[i])
                     occ_flag = 1;
             }
-            if (occupation !== undefined && occ_flag === 0) {
+            if (occupation.length >= 1 && occ_flag === 0) {
                 common_ops.alert("请选择正确的职业~~~");
                 return;
             }

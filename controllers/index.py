@@ -75,10 +75,7 @@ def single():
 
 @index_page.route("/search", methods=["POST", "GET"])
 def search():
-    app.logger.warning("===============search===============")
     req = request.form
-    app.logger.warning(req)
-    app.logger.warning(request.values)
     search_str = req['search_str'] if 'search_str' in req else ""
     req = request.values
     if search_str == "":
@@ -95,9 +92,7 @@ def search():
         "page": page,
         "url": "search?"
     }
-    app.logger.warning(page_params)
     pages = iPageNation(page_params)
-    app.logger.warning(pages)
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
     list_news = model_news[offset:limit]

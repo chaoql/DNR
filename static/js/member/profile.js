@@ -40,7 +40,7 @@ var member_profile_ops = {
             // ajax是一种数据请求的方式，不需要刷新整个页面。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新c
             $.ajax({
                 // url: "/member/reg", // 前端路由地址，全称为：http://192.168.0.108:5000/member/reg
-                url: common_ops.buildUrl("/member/commit_pro"),
+                url: common_ops.buildUrl("/member/profile"),
                 type: "POST",
                 data: {
                     nick_name:nick_name,

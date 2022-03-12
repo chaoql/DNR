@@ -83,31 +83,28 @@ def search():
     return ops_render("manager/search.html", {"data": userl, "pages": pages})
 
 
-@manager_page.route("/modify")
+@manager_page.route("/modify", methods=["POST", "GET"])
 def modify():
-    req = request.values
-    uid = int(req["id"]) if "id" in req and req["id"] else -1
-    page = 1
-    if "p" in req and req["p"]:
-        page = int(req["p"])
-    query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
-    page_params = {
-        "total_count": len(query),
-        "page_size": 24,
-        "page": page,
-        "url": "manager/modify?"
-    }
-    pages = iPageNation(page_params)
-    # 0-23, 24-47, 48-71
-    offset = (page - 1) * page_params["page_size"]
-    limit = page * page_params["page_size"]
-    # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
-    userl = query[offset:limit]
-    return ops_render("manager/modify.html", {"data": userl, "spid": uid, "pages": pages})
-
-
-@manager_page.route("/co_modify", methods=["POST", "GET"])
-def co_modify():
+    if request.method == "GET":
+        req = request.values
+        uid = int(req["id"]) if "id" in req and req["id"] else -1
+        page = 1
+        if "p" in req and req["p"]:
+            page = int(req["p"])
+        query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
+        page_params = {
+            "total_count": len(query),
+            "page_size": 24,
+            "page": page,
+            "url": "manager/modify?"
+        }
+        pages = iPageNation(page_params)
+        # 0-23, 24-47, 48-71
+        offset = (page - 1) * page_params["page_size"]
+        limit = page * page_params["page_size"]
+        # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
+        userl = query[offset:limit]
+        return ops_render("manager/modify.html", {"data": userl, "spid": uid, "pages": pages})
     req = request.values
     nick_name = req["nick_name"] if "nick_name" in req else ""
     login_name = req["login_name"] if "login_name" in req else ""
@@ -143,8 +140,9 @@ def co_modify():
     if occupation is None or len(occupation) < 1 or occupation not in occ_list:
         return ops_renderErrJSON(msg="请选择正确的职业~~~")
     if nick_name == model_user.nickname and gender == model_user.gender \
-       and True if ((use == "using" and model_user.status == 1) or (use == "not using" and model_user.status == 0)) else False \
-       and age == model_user.age and occupation == model_user.occupation:
+       and True if (
+            (use == "using" and model_user.status == 1) or (use == "not using" and model_user.status == 0)) else False \
+                                                                                                                 and age == model_user.age and occupation == model_user.occupation:
         return ops_renderJSON(msg="信息未变动~~")
     else:
         model_user.nickname = nick_name
@@ -159,27 +157,24 @@ def co_modify():
 
 @manager_page.route("/add", methods=["POST", "GET"])
 def add():
-    req = request.values
-    page = 1
-    if "p" in req and req["p"]:
-        page = int(req["p"])
-    query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
-    page_params = {
-        "total_count": len(query),
-        "page_size": 24,
-        "page": page,
-        "url": "manager/add?"
-    }
-    pages = iPageNation(page_params)
-    # 0-23, 24-47, 48-71
-    offset = (page - 1) * page_params["page_size"]
-    limit = page * page_params["page_size"]
-    userl = query[offset:limit]
-    return ops_render("manager/adduser.html", {"data": userl, "pages": pages})
-
-
-@manager_page.route("/co_add", methods=["POST", "GET"])
-def co_add():
+    if request.method == 'GET':
+        req = request.values
+        page = 1
+        if "p" in req and req["p"]:
+            page = int(req["p"])
+        query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
+        page_params = {
+            "total_count": len(query),
+            "page_size": 24,
+            "page": page,
+            "url": "manager/add?"
+        }
+        pages = iPageNation(page_params)
+        # 0-23, 24-47, 48-71
+        offset = (page - 1) * page_params["page_size"]
+        limit = page * page_params["page_size"]
+        userl = query[offset:limit]
+        return ops_render("manager/adduser.html", {"data": userl, "pages": pages})
     req = request.values
     nick_name = req["nick_name"] if "nick_name" in req else ""
     login_name = req["login_name"] if "login_name" in req else ""

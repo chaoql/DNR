@@ -195,13 +195,10 @@ def info():
     return response
 
 
-@member_page.route("/profile")
+@member_page.route("/profile", methods=["POST", "GET"])
 def profile():
-    return ops_render("member/profile.html", {'userl': g.current_user})
-
-
-@member_page.route("/commit_pro", methods=["POST", "GET"])
-def commit_pro():
+    if request.method == "GET":
+        return ops_render("member/profile.html", {'userl': g.current_user})
     req = request.values
     nick_name = req["nick_name"] if "nick_name" in req else ""
     gender = req["gender"] if "gender" in req else ""

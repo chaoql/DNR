@@ -6,6 +6,7 @@ from common.models.fl_data import FlDatum
 from common.models.user import User
 from common.models.view import View
 from sqlalchemy import or_
+
 manager_page = Blueprint("manager_page", __name__)
 
 
@@ -58,10 +59,10 @@ def search():
     if search_str == "":
         search_str = req['search_str'] if 'search_str' in req else ""
     model_user = User.query.filter(or_(User.gender.like("%" + search_str + "%"),
-                                   User.login_name.like("%" + search_str + "%"),
-                                   User.nickname.like("%" + search_str + "%"),
-                                   User.age.like("%" + search_str + "%"),
-                                   User.email.like("%" + search_str + "%"))).filter_by(power=0).all()
+                                       User.login_name.like("%" + search_str + "%"),
+                                       User.nickname.like("%" + search_str + "%"),
+                                       User.age.like("%" + search_str + "%"),
+                                       User.email.like("%" + search_str + "%"))).filter_by(power=0).all()
     count = len(model_user)
     page = 1
 
@@ -110,6 +111,7 @@ def co_modify():
     login_name = req["login_name"] if "login_name" in req else ""
     gender = req["gender"] if "gender" in req else ""
     age = int(req["age"]) if "age" in req else -1
+    use = req["use"] if "use" in req else ""
     occupation = req["occupation"] if "occupation" in req else ""
     occ_list = ["Student", "Teacher", "Engineer", "Researcher", "Doctor", "Policeman", "Others"]
     model_user = User.query.filter_by(login_name=login_name).first()
@@ -120,7 +122,15 @@ def co_modify():
         gender = model_user.gender
 
     if gender is None or len(gender) < 1 or (gender != "Female" and gender != "Male"):
-        return ops_renderErrJSON(msg="请输入正确的性别~~~")
+        return ops_renderErrJSON(msg="请选择正确的性别~~~")
+    if use == "":
+        if model_user.status == 1:
+            use = "using"
+        else:
+            use = "not using"
+
+    if use is None or len(use) < 1 or (use != "using" and use != "not using"):
+        return ops_renderErrJSON(msg="请选择正确的用户状态~~~")
 
     if age > 100 or age < 0:
         return ops_renderErrJSON(msg="请输入正确的年龄~~~")
@@ -129,15 +139,22 @@ def co_modify():
         occupation = model_user.occupation
 
     if occupation is None or len(occupation) < 1 or occupation not in occ_list:
-        return ops_renderErrJSON(msg="请输入正确的职业~~~")
+        return ops_renderErrJSON(msg="请选择正确的职业~~~")
     if nick_name == model_user.nickname and gender == model_user.gender \
-            and age == model_user.age and occupation == model_user.occupation:
+       and use == "using" if model_user.status == 1 else "not using" and age == model_user.age \
+                                                         and occupation == model_user.occupation:
         return ops_renderJSON(msg="信息未变动~~")
     else:
         model_user.nickname = nick_name
         model_user.gender = gender
         model_user.age = age
         model_user.occupation = occupation
+        model_user.status = 1 if use == "using" else 0
         db.session.add(model_user)
         db.session.commit()
         return ops_renderJSON(msg="信息修改成功~~")
+
+
+@manager_page.route("/add", methods=["POST", "GET"])
+def add():
+    pass

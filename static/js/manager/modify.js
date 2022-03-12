@@ -14,6 +14,7 @@ var member_modify_ops = {
             const login_name = $(".modify-wrap input[name=login_name]").val();
             const gender = $(".modify-wrap input[name=gender]").val();
             const age = $(".modify-wrap input[name=age]").val();
+            const use = $(".modify-wrap input[name=use-power]").val();
             const occupation = $(".modify-wrap input[name=occupation]").val();
             const occ_list = ["Student", "Teacher", "Engineer", "Researcher", "Doctor", "Policeman", "Others"];
             let occ_flag = 0;
@@ -21,8 +22,12 @@ var member_modify_ops = {
                 common_ops.alert("请输入正确的昵称~~~");
                 return;
             }
+            if (use.length >=1 && use !=="using" && use !== "not using"){
+                common_ops.alert("请选择正确的用户状态~~~");
+                return;
+            }
             if (gender.length >= 1 && gender !== "Male" && gender !== "Female") {
-                common_ops.alert("请选择正确的性别~~~1");
+                common_ops.alert("请选择正确的性别~~~");
                 return;
             }
             if (age === undefined || age.length < 1 || (age > 100 || age < 0)) {
@@ -48,6 +53,7 @@ var member_modify_ops = {
                     login_name:login_name,
                     gender: gender,
                     age: age,
+                    use: use,
                     occupation: occupation
                 },
                 dataType: 'json', // 返回值格式

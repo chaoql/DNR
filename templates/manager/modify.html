@@ -45,11 +45,19 @@
                             </td>
                             {% if item.status == 0 %}
                                 <td class="td-status">
-                                    <span class="label label-danger">not using</span>
+                                    <input type="text" name="use-power" list="use-list" placeholder="not using">
+                                    <datalist id="use-list">
+                                        <option>using</option>
+                                        <option>not using</option>
+                                    </datalist>
                                 </td>
                             {% else %}
                                 <td class="td-status">
-                                    <span class="label label-success">using</span>
+                                    <input type="text" name="use-power" list="use-list" placeholder="using">
+                                    <datalist id="use-list">
+                                        <option>using</option>
+                                        <option>not using</option>
+                                    </datalist>
                                 </td>
                             {% endif %}
                             <td>

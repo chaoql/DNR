@@ -10,6 +10,7 @@
                     <th style="text-align:center">Gneder</th>
                     <th style="text-align:center">Age</th>
                     <th style="text-align:center">Occupation</th>
+                    <th style="text-align:center">Email</th>
                     <th style="text-align:center">status</th>
                     <th style="text-align:center">operation</th>
                 </tr>
@@ -22,14 +23,15 @@
                             <td>
                                 <input type="text" readonly="readonly" name="login_name" value="{{ item.login_name }}">
                             </td>
-                            <td>
-                                <input type="text" name="gender" list="gender-list" placeholder="{{ item.gender }}">
+                            <td style="width:100px">
+                                <input type="text" name="gender" style="width:100px" list="gender-list" placeholder="{{ item.gender }}">
                                 <datalist id="gender-list">
                                     <option>Male</option>
                                     <option>Female</option>
                                 </datalist>
                             </td>
-                            <td><input type="text" name="age" value="{{ item.age }}"></td>
+                            <td style="width:50px"><input type="text" style="width:50px" name="age"
+                                                          value="{{ item.age }}"></td>
                             <td>
                                 <input type="text" name="occupation" list="occupation-list"
                                        placeholder="{{ item.occupation }}">
@@ -43,23 +45,22 @@
                                     <option>Others</option>
                                 </datalist>
                             </td>
-                            {% if item.status == 0 %}
-                                <td class="td-status">
-                                    <input type="text" name="use-power" list="use-list" placeholder="not using">
-                                    <datalist id="use-list">
-                                        <option>using</option>
-                                        <option>not using</option>
-                                    </datalist>
-                                </td>
-                            {% else %}
-                                <td class="td-status">
-                                    <input type="text" name="use-power" list="use-list" placeholder="using">
-                                    <datalist id="use-list">
-                                        <option>using</option>
-                                        <option>not using</option>
-                                    </datalist>
-                                </td>
-                            {% endif %}
+                            <td>
+                                <input type="text" readonly="readonly" name="email" value="{{ item.email }}">
+                            </td>
+                            <td class="td-status" style="width:100px">
+                                {% if item.status == 0 %}
+                                    <input type="text" style="width:100px" name="use-power" list="use-list"
+                                           placeholder="not using">
+                                {% else %}
+                                    <input type="text" style="width:100px" name="use-power" list="use-list"
+                                           placeholder="using">
+                                {% endif %}
+                                <datalist id="use-list">
+                                    <option>using</option>
+                                    <option>not using</option>
+                                </datalist>
+                            </td>
                             <td>
                                 <button class="label label-primary do-modify">
                                     commit
@@ -71,15 +72,14 @@
                             <td>{{ item.gender }}</td>
                             <td>{{ item.age }}</td>
                             <td>{{ item.occupation }}</td>
-                            {% if item.status == 0 %}
-                                <td class="td-status">
+                            <td>{{ item.email }}</td>
+                            <td class="td-status">
+                                {% if item.status == 0 %}
                                     <span class="label label-danger">not using</span>
-                                </td>
-                            {% else %}
-                                <td class="td-status">
+                                {% else %}
                                     <span class="label label-success">using</span>
-                                </td>
-                            {% endif %}
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="{{ buildUrl('manager/modify')~'?id='~item.id }}">
                                     <span class="label label-primary">modify</span>

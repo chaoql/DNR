@@ -127,6 +127,7 @@ def f_reset():
         return ops_renderErrJSON(msg="请输入正确的确认新登陆密码~~")
     if model_user:
         model_user.login_pwd = UserService.genePwd(new_pwd, model_user.login_salt)
+        model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
         db.session.add(model_user)
         db.session.commit()
         return ops_renderJSON(msg="密码重置成功~~")
@@ -153,6 +154,7 @@ def reset():
     model_user = User.query.filter_by(login_pwd=tmp_pwd).first()
     if model_user:
         model_user.login_pwd = UserService.genePwd(new_pwd, g.current_user.login_salt)
+        model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
         db.session.add(model_user)
         db.session.commit()
         return ops_renderJSON(msg="密码修改成功~~")
@@ -231,6 +233,7 @@ def commit_pro():
         model_user.gender = gender
         model_user.age = age
         model_user.occupation = occupation
+        model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
         db.session.add(model_user)
         db.session.commit()
         return ops_renderJSON(msg="信息修改成功~~")

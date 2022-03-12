@@ -9,6 +9,7 @@
                 <th style="text-align:center">Gneder</th>
                 <th style="text-align:center">Age</th>
                 <th style="text-align:center">Occupation</th>
+                <th style="text-align:center">Email</th>
                 <th style="text-align:center">status</th>
                 <th style="text-align:center">operation</th>
             </tr>
@@ -21,6 +22,7 @@
                     <td>{{ item.gender }}</td>
                     <td>{{ item.age }}</td>
                     <td>{{ item.occupation }}</td>
+                    <td>{{ item.email }}</td>
                     {% if item.status == 0 %}
                         <td class="td-status">
                             <span class="label label-danger">not using</span>

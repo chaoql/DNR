@@ -1,0 +1,37 @@
+{% extends "common/nm_layout.html" %}
+{% block content %}
+    {% if data %}
+        <table class="table table-hover" style="text-align:center">
+            <thead style="text-align:center">
+            <tr>
+                <th style="text-align:center">Title</th>
+                <th style="text-align:center">Genre</th>
+                <th style="text-align:center">Authors</th>
+                <th style="text-align:center">Link</th>
+                <th style="text-align:center">Date</th>
+                <th style="text-align:center">View</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in data %}
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.genres }}</td>
+                    <td>{{ item.authors }}</td>
+                    <td>{{ item.link }}</td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.view_counter }}</td>
+                    <td>
+                        <a href="{{ buildUrl('newsManager/modify')~'?id='~item.id }}">
+                            <span class="label label-primary">modify</span>
+                        </a>
+                        <a href="{{ buildUrl('newsManager/delete')~'?id='~item.id }}">
+                            <span class="label label-danger">delete</span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

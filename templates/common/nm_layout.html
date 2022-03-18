@@ -20,57 +20,49 @@
     <link rel="stylesheet" href="/static/scripts/sweetalert/dist/sweetalert.css">
     <!-- Custom style -->
     <link rel="stylesheet" href="/static/css/style.css">
-{#    <link rel="stylesheet" href="/static/css/skins/all.css">#}
+    <link rel="stylesheet" href="/static/css/skins/all.css">
     <link rel="stylesheet" href="/static/css/demo.css">
     {% block css %}{% endblock %}
 
 </head>
 <body class="skin-orange">
-<header class="primary">
-    <!-- Start nav -->
-    <nav class="menu">
-        <div class="container">
-            <div class="row"></div>
-            <div class="col-md-2">
-                <a href="{{ buildUrl("/") }}">
-                    <h3>DNR</h3>
-                </a>
-            </div>
-            <div class="col-md-7">
-                <form class="search" method="post" action="{{ buildUrl("search") }}">
-                    <div class="form-group">
-                        <div class="input-group" style="margin-top:8px;">
-                            <input type="text" name="search_str" class="form-control" placeholder="Search News">
-                            <div class="input-group-btn">
-                                <button type="submit" class="btn btn-primary"><i class="ion-search"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-md-3 text-right">
-                <ul class="nav-icons">
-                    {% if current_user %}
-                        <li><a href="#">{{ current_user.login_name }}</a>
-                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
-                                {% if current_user.power == 0 %}
-                                    <li><a href="{{ buildUrl('member/profile') }}">Your profile</a></li>
-                                    <li><a href="{{ buildUrl('member/reset') }}">Reset Password</a></li>
-                                {% else %}
-                                    <li><a href="{{ buildUrl('userManager/') }}">Manage User</a></li>
-                                {% endif %}
-                                <li><a href="{{ buildUrl('member/logout') }}">Logout</a></li>
-                            </ul>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- End nav -->
-</header>
 <div style="min-height: 600px">
-    {% block content %}{% endblock %}
+    <section>
+        <div class="container">
+            <div class="page-wrapper">
+                <div class="row">
+                    <div class="col-md-8">
+                        <form class="search" method="post" action="{{ buildUrl("newsManager/search") }}">
+                            <div class="input-group">
+                                <input name="search_str" type="text" class="form-control" placeholder="Search Users">
+                                <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="ion-search"></i>
+                                </button>
+                            </span>
+                            </div><!-- /input-group -->
+                        </form>
+                    </div><!-- /.col-lg-6 -->
+                    <div class="col-md-2">
+                        <a href="{{ buildUrl("/newsManager/add") }}">
+                            <button class="btn btn-primary btn-block">
+                                Add User
+                            </button>
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ buildUrl("/") }}">
+                            <button class="btn btn-primary btn-block">
+                                Return
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                {% block content %}{% endblock %}
+            </div>
+            {% include "common/pagenation.html" %}
+        </div>
+    </section>
 </div>
 <footer class="footer">
     <div style="text-align:center; margin-bottom: 45px">

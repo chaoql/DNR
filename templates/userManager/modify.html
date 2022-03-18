@@ -1,4 +1,4 @@
-{% extends "common/m_layout.html" %}
+{% extends "common/um_layout.html" %}
 {% block content %}
     {% if data %}
         <div class="modify-wrap">
@@ -81,10 +81,10 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{{ buildUrl('manager/modify')~'?id='~item.id }}">
+                                <a href="{{ buildUrl('userManager/modify')~'?id='~item.id }}">
                                     <span class="label label-primary">modify</span>
                                 </a>
-                                <a href="{{ buildUrl('manager/delete')~'?id='~item.id }}">
+                                <a href="{{ buildUrl('userManager/delete')~'?id='~item.id }}">
                                     <span class="label label-danger">delete</span>
                                 </a>
                             </td>
@@ -98,5 +98,5 @@
     {% endif %}
 {% endblock %}
 {% block js %}
-    <script src="{{ buildStaticUrl("/js/manager/modify.js") }}"></script>
+    <script src="{{ buildStaticUrl("/js/user_manager/modify.js") }}"></script>
 {% endblock %}

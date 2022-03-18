@@ -4,37 +4,37 @@ from common.libs.FLHelper.DateHelper import getCurrentTime
 from common.libs.FLHelper.Helper import iPageNation, ops_render, ops_renderErrJSON, ops_renderJSON
 from common.libs.FLHelper.UrlManager import UrlManager
 from common.libs.FLHelper.UserService import UserService
-from common.models.fl_data import FlDatum
+from common.models.news import News
 from common.models.user import User
 from common.models.view import View
 from sqlalchemy import or_
 
-manager_page = Blueprint("manager_page", __name__)
+newsManager_page = Blueprint("newsManager_page", __name__)
 
 
-@manager_page.route("/")
+@newsManager_page.route("/")
 def showUser():
     req = request.values
     page = 1
     if "p" in req and req["p"]:
         page = int(req["p"])
-    query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
+    query = News.query.filter_by(power=0).order_by(News.date.desc(), News.id.desc()).all()
     page_params = {
         "total_count": len(query),
         "page_size": 24,
         "page": page,
-        "url": "manager?"
+        "url": "newsManager?"
     }
     pages = iPageNation(page_params)
     # 0-23, 24-47, 48-71
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
     # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
-    userl = query[offset:limit]
-    return ops_render("manager/userManager.html", {"data": userl, "pages": pages})
+    newsl = query[offset:limit]
+    return ops_render("newsManager/newsManager.html", {"data": newsl, "pages": pages})
 
 
-@manager_page.route("/delete")
+@newsManager_page.route("/delete")
 def delete():
     req = request.values
     uid = int(req["id"]) if "id" in req and req["id"] else -1
@@ -45,15 +45,11 @@ def delete():
         if model_view:
             for view in model_view:
                 db.session.delete(view)
-        model_fl = FlDatum.query.filter_by(userID=uid).all()
-        if model_fl:
-            for fl in model_fl:
-                db.session.delete(fl)
     db.session.commit()
     return redirect(UrlManager.buildUrl("manager/"))
 
 
-@manager_page.route("/search", methods=["POST", "GET"])
+@newsManager_page.route("/search", methods=["POST", "GET"])
 def search():
     req = request.form
     search_str = req['search_str'] if 'search_str' in req else ""
@@ -83,7 +79,7 @@ def search():
     return ops_render("manager/search.html", {"data": userl, "pages": pages})
 
 
-@manager_page.route("/modify", methods=["POST", "GET"])
+@newsManager_page.route("/modify", methods=["POST", "GET"])
 def modify():
     if request.method == "GET":
         req = request.values
@@ -155,7 +151,7 @@ def modify():
         return ops_renderJSON(msg="信息修改成功~~")
 
 
-@manager_page.route("/add", methods=["POST", "GET"])
+@newsManager_page.route("/add", methods=["POST", "GET"])
 def add():
     if request.method == 'GET':
         req = request.values

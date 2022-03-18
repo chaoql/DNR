@@ -138,7 +138,7 @@ class JobTask:
         """
         app.logger.warning("正在从线上获取页面content...")
         try:
-            driver = webdriver.Chrome(executable_path="C:/Program Files/Google/Chrome/Application/chromedriver.exe")
+            driver = webdriver.Chrome(executable_path="C:/Program Files/Google/Chrome/Application/chromedriver.exe")  # chromedriver的地址
             driver.get(url=url)
             if flag == "list":
                 for i in range(1, 200):

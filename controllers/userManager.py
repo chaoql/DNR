@@ -75,7 +75,7 @@ def search():
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
     userl = model_user[offset:limit]
-    return ops_render("userManager/search.html", {"data": userl, "pages": pages})
+    return ops_render("userManager/search.html", {"str": search_str, "data": userl, "pages": pages})
 
 
 @userManager_page.route("/modify", methods=["POST", "GET"])

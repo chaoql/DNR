@@ -1,42 +1,40 @@
-{% extends "common/um_layout.html" %}
+{% extends "common/nm_layout.html" %}
 {% block content %}
     {% if data %}
         <table class="table table-hover" style="text-align:center">
             <thead style="text-align:center">
             <tr>
-                <th style="text-align:center">Nickname</th>
-                <th style="text-align:center">Loginname</th>
-                <th style="text-align:center">Gneder</th>
-                <th style="text-align:center">Age</th>
-                <th style="text-align:center">Occupation</th>
-                <th style="text-align:center">Email</th>
-                <th style="text-align:center">status</th>
-                <th style="text-align:center">operation</th>
+                <th style="text-align:center">Title</th>
+                <th style="text-align:center">Genre</th>
+                <th style="text-align:center">Authors</th>
+                <th style="text-align:center">Link</th>
+                <th style="text-align:center">Date</th>
+                <th style="text-align:center">View</th>
+                <th style="text-align:center">Operation</th>
             </tr>
             </thead>
             <tbody>
             {% for item in data %}
                 <tr>
-                    <td>{{ item.nickname }}</td>
-                    <td>{{ item.login_name }}</td>
-                    <td>{{ item.gender }}</td>
-                    <td>{{ item.age }}</td>
-                    <td>{{ item.occupation }}</td>
-                    <td>{{ item.email }}</td>
-                    {% if item.status == 0 %}
-                        <td class="td-status">
-                            <span class="label label-danger">not using</span>
-                        </td>
-                    {% else %}
-                        <td class="td-status">
-                            <span class="label label-success">using</span>
-                        </td>
-                    {% endif %}
                     <td>
-                        <a href="{{ buildUrl('userManager/modify') }}">
+                        <p style="width: 200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            {{ item.title }}
+                        </p>
+                    </td>
+                    <td>{{ item.genres }}</td>
+                    <td>{{ item.authors }}</td>
+                    <td>
+                        <a href="{{ item.link }}">
+                            点击转到数据来源
+                        </a>
+                    </td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.view_counter }}</td>
+                    <td>
+                        <a href="{{ buildUrl('newsManager/modify')~'?id='~item.id }}">
                             <span class="label label-primary">modify</span>
                         </a>
-                        <a href="{{ buildUrl('userManager/delete')~'?id='~item.id }}">
+                        <a href="{{ buildUrl('newsManager/delete')~'?id='~item.id }}">
                             <span class="label label-danger">delete</span>
                         </a>
                     </td>
@@ -44,5 +42,39 @@
             {% endfor %}
             </tbody>
         </table>
+    {% endif %}
+    {% if pages.total_count > 10 %}
+        <div class="row">
+            <div class="col-md-12">
+                <span class="pagination-count"
+                      style="line-height: 84px;">共有{{ pages.total_count }}条记录|每页{{ pages.page_size }}条</span>
+                <ul class="pagination pull-right">
+                    {% if pages.is_prev == 1 %}
+                        <li>
+                            <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current - 1)|string) ~ '&search_str=' ~ str) }}"
+                               aria-label="Previous">
+                                <span aria-hidden="true"><i class="ion-ios-arrow-left"></i></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for idx in pages.range %}
+                        {% if (idx - pages.current < 3 and idx - pages.current > -3) or idx == pages.total_pages %}
+                            <li {% if pages.current == idx %} class="active" {% endif %}><a
+                                    href="{{ buildUrl(pages.url ~ '&p=' ~ (idx|string) ~ '&search_str=' ~ str) }}">{{ idx }}</a>
+                                {% elif idx - pages.current == 3 or pages.current - idx == 3 %}
+                            <li><a href="#">...</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if pages.is_next == 1 %}
+                        <li>
+                            <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current + 1)|string) ~ '&search_str=' ~ str) }}"
+                               aria-label="Next">
+                                <span aria-hidden="true"><i class="ion-ios-arrow-right"></i></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

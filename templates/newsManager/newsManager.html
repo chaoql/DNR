@@ -10,15 +10,24 @@
                 <th style="text-align:center">Link</th>
                 <th style="text-align:center">Date</th>
                 <th style="text-align:center">View</th>
+                <th style="text-align:center">Operation</th>
             </tr>
             </thead>
             <tbody>
             {% for item in data %}
                 <tr>
-                    <td>{{ item.title }}</td>
+                    <td>
+                        <p style="width: 200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            {{ item.title }}
+                        </p>
+                    </td>
                     <td>{{ item.genres }}</td>
                     <td>{{ item.authors }}</td>
-                    <td>{{ item.link }}</td>
+                    <td>
+                        <a href="{{ item.link }}">
+                            点击转到数据来源
+                        </a>
+                    </td>
                     <td>{{ item.date }}</td>
                     <td>{{ item.view_counter }}</td>
                     <td>
@@ -34,4 +43,5 @@
             </tbody>
         </table>
     {% endif %}
+    {% include "common/pagenation.html" %}
 {% endblock %}

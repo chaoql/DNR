@@ -96,6 +96,7 @@
             </table>
         </div>
     {% endif %}
+    {% include "common/pagenation.html" %}
 {% endblock %}
 {% block js %}
     <script src="{{ buildStaticUrl("/js/user_manager/modify.js") }}"></script>

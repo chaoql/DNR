@@ -18,7 +18,7 @@ def showUser():
     page = 1
     if "p" in req and req["p"]:
         page = int(req["p"])
-    query = News.query.filter_by(power=0).order_by(News.date.desc(), News.id.desc()).all()
+    query = News.query.order_by(News.date.desc(), News.id.desc()).all()
     page_params = {
         "total_count": len(query),
         "page_size": 24,
@@ -37,16 +37,16 @@ def showUser():
 @newsManager_page.route("/delete")
 def delete():
     req = request.values
-    uid = int(req["id"]) if "id" in req and req["id"] else -1
-    model_user = User.query.filter_by(id=uid).first()
-    if model_user:
-        db.session.delete(model_user)
-        model_view = View.query.filter_by(userID=uid).all()
+    nid = int(req["id"]) if "id" in req and req["id"] else -1
+    model_news = News.query.filter_by(id=nid).first()
+    if model_news:
+        db.session.delete(model_news)
+        model_view = View.query.filter_by(newsID=nid).all()
         if model_view:
             for view in model_view:
                 db.session.delete(view)
     db.session.commit()
-    return redirect(UrlManager.buildUrl("manager/"))
+    return redirect(UrlManager.buildUrl("newsManager/"))
 
 
 @newsManager_page.route("/search", methods=["POST", "GET"])
@@ -56,12 +56,12 @@ def search():
     req = request.values
     if search_str == "":
         search_str = req['search_str'] if 'search_str' in req else ""
-    model_user = User.query.filter(or_(User.gender.like("%" + search_str + "%"),
-                                       User.login_name.like("%" + search_str + "%"),
-                                       User.nickname.like("%" + search_str + "%"),
-                                       User.age.like("%" + search_str + "%"),
-                                       User.email.like("%" + search_str + "%"))).filter_by(power=0).all()
-    count = len(model_user)
+    model_news = News.query.filter(or_(News.genres.like("%" + search_str + "%"),
+                                       News.title.like("%" + search_str + "%"),
+                                       News.date.like("%" + search_str + "%"),
+                                       News.text.like("%" + search_str + "%"),
+                                       News.view_counter.like(search_str))).order_by(News.date.desc(), News.id.desc()).all()
+    count = len(model_news)
     page = 1
 
     if "p" in req and req["p"]:
@@ -70,13 +70,13 @@ def search():
         "total_count": count,
         "page_size": 24,
         "page": page,
-        "url": "manager/search?"
+        "url": "newsManager/search?"
     }
     pages = iPageNation(page_params)
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
-    userl = model_user[offset:limit]
-    return ops_render("manager/search.html", {"data": userl, "pages": pages})
+    newsl = model_news[offset:limit]
+    return ops_render("newsManager/search.html", {'str': search_str, "data": newsl, "pages": pages})
 
 
 @newsManager_page.route("/modify", methods=["POST", "GET"])

@@ -18,10 +18,12 @@
 								</ul>
 							</header>
 							<div class="main">
+                                {% if news.photo %}
                                 <div class="featured" align="center">
 										<img src="{{ pic_path ~ news.hash~ ".jpg" }}" height="360" width="600">
 										<figcaption>Image by {{ news.authors }}</figcaption>
 								</div>
+                                {% endif %}
                                 <p>{{ news.text }}</p>
 							</div>
 						</article>

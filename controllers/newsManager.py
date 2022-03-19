@@ -1,3 +1,4 @@
+import hashlib
 import re
 
 from flask import Blueprint, request, redirect, g
@@ -12,7 +13,7 @@ from common.models.view import View
 from sqlalchemy import or_
 
 newsManager_page = Blueprint("newsManager_page", __name__)
-
+Tmodel_news = News()
 
 @newsManager_page.route("/")
 def showUser():
@@ -62,7 +63,8 @@ def search():
                                        News.title.like("%" + search_str + "%"),
                                        News.date.like("%" + search_str + "%"),
                                        News.text.like("%" + search_str + "%"),
-                                       News.view_counter.like(search_str))).order_by(News.date.desc(), News.id.desc()).all()
+                                       News.view_counter.like(search_str))).order_by(News.date.desc(),
+                                                                                     News.id.desc()).all()
     count = len(model_news)
     page = 1
 
@@ -102,6 +104,7 @@ def modify():
         limit = page * page_params["page_size"]
         # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
         newsl = query[offset:limit]
+        app.logger.warning("*********************newsText get***********************")
         return ops_render("newsManager/modify.html", {"data": newsl, "spid": nid, "pages": pages})
     req = request.values
     id = req["id"] if "id" in req else ""
@@ -111,18 +114,13 @@ def modify():
     date = req["date"] if "date" in req else ""
     view = req["view"] if "view" in req else ""
     genre_list = ["antip", "ent", "milite", "world", "tech", "finance"]
-    model_news = News.query.filter_by(id=id).first()
-    app.logger.warning(id)
-    app.logger.warning(title)
-    app.logger.warning(genre)
-    app.logger.warning(authors)
-    app.logger.warning(date)
-    app.logger.warning(view)
+    global Tmodel_news
+    Tmodel_news = News.query.filter_by(id=id).first()
     if title is None or len(title) < 1:
         return ops_renderErrJSON(msg="请输入正确的新闻题目~~~")
 
     if genre == "":
-        genre = model_news.genres
+        genre = Tmodel_news.genres
 
     if genre is None or len(genre) < 1 or genre not in genre_list:
         return ops_renderErrJSON(msg="请选择正确的新闻类别~~~")
@@ -132,23 +130,30 @@ def modify():
 
     # 匹配日期格式
     ret = re.match("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", date)
-    if ret ==  None:
+    if ret == None:
         return ops_renderErrJSON(msg="请输入正确的新闻发布时间，如：2022-03-18 17:12:00~~~")
 
     if str.isdigit(view) == False or str == "":
         return ops_renderErrJSON(msg="请输入正确的新闻阅读数~~~")
 
-    if title == model_news.title and genre == model_news.genres and int(view) == model_news.view_counter\
-       and authors == model_news.authors and date == model_news.date:
+    app.logger.warning("*********************modify post***********************")
+    app.logger.warning(title)
+    app.logger.warning(genre)
+    app.logger.warning(authors)
+    app.logger.warning(date)
+    app.logger.warning(view)
+    app.logger.warning(Tmodel_news.hash)
+    if title == Tmodel_news.title and genre == Tmodel_news.genres and int(view) == Tmodel_news.view_counter \
+            and authors == Tmodel_news.authors and date == Tmodel_news.date:
         return ops_renderJSON(msg="信息未变动~~")
     else:
-        model_news.title = title
-        model_news.genres = genre
-        model_news.view_counter = int(view)
-        model_news.authors = authors
-        model_news.date = date
-        db.session.add(model_news)
-        db.session.commit()
+        Tmodel_news.title = title
+        Tmodel_news.genres = genre
+        Tmodel_news.view_counter = int(view)
+        Tmodel_news.authors = authors
+        Tmodel_news.date = date
+        # db.session.add(model_news)
+        # db.session.commit()
         return ops_renderJSON(msg="信息修改成功~~")
 
 
@@ -159,65 +164,92 @@ def add():
         page = 1
         if "p" in req and req["p"]:
             page = int(req["p"])
-        query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
+        query = News.query.order_by(News.date.desc(), News.id.desc()).all()
         page_params = {
             "total_count": len(query),
             "page_size": 24,
             "page": page,
-            "url": "manager/add?"
+            "url": "newsManager/add?"
         }
         pages = iPageNation(page_params)
         # 0-23, 24-47, 48-71
         offset = (page - 1) * page_params["page_size"]
         limit = page * page_params["page_size"]
-        userl = query[offset:limit]
-        return ops_render("manager/adduser.html", {"data": userl, "pages": pages})
+        newsl = query[offset:limit]
+        return ops_render("newsManager/addnews.html",
+                          {"data": newsl, "pages": pages, "date": getCurrentTime("%Y-%m-%d %H:%M:%S")})
     req = request.values
-    nick_name = req["nick_name"] if "nick_name" in req else ""
-    login_name = req["login_name"] if "login_name" in req else ""
-    gender = req["gender"] if "gender" in req else ""
-    age = int(req["age"]) if "age" in req else -1
-    use = req["use"] if "use" in req else ""
-    occupation = req["occupation"] if "occupation" in req else ""
-    email = req["email"] if "email" in req else ""
-    login_pwd = "666666"  # 默认密码为666666
-    occ_list = ["Student", "Teacher", "Engineer", "Researcher", "Doctor", "Policeman", "Others"]
-    model_user = User.query.filter_by(login_name=login_name).first()
-    if model_user:
-        return ops_renderErrJSON(msg="用户名已存在~~~")
+    title = req["title"] if "title" in req else ""
+    genre = req["genre"] if "genre" in req else ""
+    authors = req["authors"] if "authors" in req else ""
+    date = req["date"] if "date" in req else ""
+    view = req["view"] if "view" in req else ""
+    link = req["link"] if "link" in req else ""
+    genre_list = ["antip", "ent", "milite", "world", "tech", "finance"]
+    app.logger.warning(title)
+    app.logger.warning(genre)
+    app.logger.warning(authors)
+    app.logger.warning(date)
+    app.logger.warning(view)
+    if title is None or len(title) < 1:
+        return ops_renderErrJSON(msg="请输入正确的新闻题目~~~")
 
-    if nick_name is None or len(nick_name) < 1:
-        return ops_renderErrJSON(msg="请输入正确的昵称~~~")
+    if genre is None or len(genre) < 1 or genre not in genre_list:
+        return ops_renderErrJSON(msg="请选择正确的新闻类别~~~")
 
-    if login_name is None or len(login_name) < 1:
-        return ops_renderErrJSON(msg="请输入正确的用户名~~~")
+    if authors is None or len(authors) < 1:
+        return ops_renderErrJSON(msg="请输入正确的新闻作者~~~")
 
-    if gender is None or len(gender) < 1 or (gender != "Female" and gender != "Male"):
-        return ops_renderErrJSON(msg="请选择正确的性别~~~")
+    # 匹配网站url格式
+    ret = re.match("(http|https):\/\/([\w-]+\.)+[\w-]+(\/[\w.-\/?%&=]*)?", link)
+    if ret is None:
+        return ops_renderErrJSON(msg="请输入正确的来源网址~~~")
 
-    if use is None or len(use) < 1 or (use != "using" and use != "not using"):
-        return ops_renderErrJSON(msg="请选择正确的用户状态~~~")
+    # 匹配日期格式
+    ret = re.match("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", date)
+    if ret is None:
+        return ops_renderErrJSON(msg="请输入正确的新闻发布时间，如：2022-03-18 17:12:00~~~")
 
-    if age > 100 or age < 0:
-        return ops_renderErrJSON(msg="请输入正确的年龄~~~")
+    if str.isdigit(view) == False or str == "":
+        return ops_renderErrJSON(msg="请输入正确的新闻阅读数~~~")
 
-    if occupation is None or len(occupation) < 1 or occupation not in occ_list:
-        return ops_renderErrJSON(msg="请选择正确的职业~~~")
+    # model_news = News()
+    Tmodel_news.title = title
+    Tmodel_news.link = link
+    Tmodel_news.genres = genre
+    Tmodel_news.view_counter = int(view)
+    Tmodel_news.authors = authors
+    Tmodel_news.date = date
+    Tmodel_news.hash = hashlib.md5(link.encode("utf-8")).hexdigest()
+    # db.session.add(model_news)
+    # db.session.commit()
+    return ops_renderJSON(msg="新闻添加成功(1/2)~~~")
 
-    if email is None or len(email) < 1:
-        return ops_renderErrJSON(msg="请输入正确的邮箱~~~")
-    model_user = User()
-    model_user.nickname = nick_name
-    model_user.gender = gender
-    model_user.login_name = login_name
-    model_user.age = age
-    model_user.occupation = occupation
-    model_user.login_salt = UserService.geneSalt(8)
-    model_user.login_pwd = UserService.genePwd(login_pwd, model_user.login_salt)
-    model_user.created_time = model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
-    model_user.status = 1 if use == "using" else 0
-    model_user.power = 0
-    model_user.email = email
-    db.session.add(model_user)
-    db.session.commit()
-    return ops_renderJSON(msg="用户添加成功~~~")
+
+@newsManager_page.route("/newstext", methods=["POST", "GET"])
+def newstext():
+    if request.method == "GET":
+        req = request.values
+        id = req["id"] if "id" in req else ""
+        if id:
+            text = News.query.filter_by(id=id).first().text
+        else:
+            text = ""
+        app.logger.warning("*********************newsText get***********************")
+        return ops_render("newsText.html", {"data": text})
+    else:
+        app.logger.warning("*********************newsText post***********************")
+        app.logger.warning(Tmodel_news.title)
+        app.logger.warning(Tmodel_news.genres)
+        app.logger.warning(Tmodel_news.authors)
+        app.logger.warning(Tmodel_news.date)
+        app.logger.warning(Tmodel_news.view_counter)
+        app.logger.warning(Tmodel_news.hash)
+        f = request.form
+        text = f["text"] if "text" in f else ""
+        link = f["link"] if "link" in f else ""
+        Tmodel_news.text = text
+        Tmodel_news.photo = link
+        db.session.add(Tmodel_news)
+        db.session.commit()
+        return redirect(UrlManager.buildUrl("newsManager/"))

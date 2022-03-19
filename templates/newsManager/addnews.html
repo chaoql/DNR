@@ -1,13 +1,13 @@
-{% extends "common/um_layout.html" %}
+{% extends "common/nm_layout.html" %}
 {% block content %}
     {% if data %}
         <table class="table table-hover add-wrap" style="text-align:center">
             <thead style="text-align:center">
             <tr>
-                <th style="text-align:center">Title</th>
-                <th style="text-align:center">Genre</th>
+                <th style="text-align:center; width:150px">Title</th>
+                <th style="text-align:center; width:100px">Genre</th>
                 <th style="text-align:center">Authors</th>
-                <th style="text-align:center">Link</th>
+                <th style="text-align:center; width:120px">Link</th>
                 <th style="text-align:center">Date</th>
                 <th style="text-align:center">View</th>
                 <th style="text-align:center">Operation</th>
@@ -15,11 +15,9 @@
             </thead>
             <tbody>
             <tr>
-                <p id="newsID" hidden="hidden"> {{ item.id }} </p>
-                <td><input type="text" name="title" value="{{ item.title }}"></td>
+                <td><input type="text" name="title" style="width:150px" placeholder="新闻题目"></td>
                 <td style="width:100px">
-                    <input type="text" name="genre" style="width:100px" list="genre-list"
-                           placeholder="{{ item.genre }}">
+                    <input type="text" name="genre" style="width:100px" list="genre-list" placeholder="新闻类别">
                     <datalist id="genre-list">
                         <option>antip</option>
                         <option>ent</option>
@@ -29,42 +27,40 @@
                         <option>finance</option>
                     </datalist>
                 </td>
-                <td style="width:50px"><input type="text" style="width:50px" name="authors" value="{{ item.authors }}"></td>
-                <td>
-                    <a href="{{ item.link }}">
-                        点击转到数据来源
-                    </a>
+                <td style="width:50px"><input type="text" style="width:100px" name="authors" placeholder="作者姓名">
                 </td>
-                <td><input type="text" name="date" value="{{ item.date }}"></td>
-                <td><input type="text" name="view" value="{{ item.view_counter }}"></td>
                 <td>
-                    <button class="label label-primary do-modify">
+                    <input type="text" style="width:120px" name="link" placeholder="来源网站">
+                </td>
+                <td><input type="text" name="date" value="{{ date }}"></td>
+                <td><input type="text" name="view" placeholder="新闻阅览数"></td>
+                <td>
+                    <button class="label label-primary do-add">
                         commit
                     </button>
                 </td>
             </tr>
             {% for item in data %}
                 <tr>
-                    <td>{{ item.nickname }}</td>
-                    <td>{{ item.login_name }}</td>
-                    <td>{{ item.gender }}</td>
-                    <td>{{ item.age }}</td>
-                    <td>{{ item.occupation }}</td>
-                    <td>{{ item.email }}</td>
-                    {% if item.status == 0 %}
-                        <td class="td-status">
-                            <span class="label label-danger">not using</span>
-                        </td>
-                    {% else %}
-                        <td class="td-status">
-                            <span class="label label-success">using</span>
-                        </td>
-                    {% endif %}
                     <td>
-                        <a href="{{ buildUrl('userManager/modify') }}">
+                        <p style="width: 150px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                            {{ item.title }}
+                        </p>
+                    </td>
+                    <td style="width: 100px;">{{ item.genres }}</td>
+                    <td>{{ item.authors }}</td>
+                    <td>
+                        <a href="{{ item.link }}">
+                            点击转到数据来源
+                        </a>
+                    </td>
+                    <td>{{ item.date }}</td>
+                    <td>{{ item.view_counter }}</td>
+                    <td>
+                        <a href="{{ buildUrl('newsManager/modify')~'?id='~item.id }}">
                             <span class="label label-primary">modify</span>
                         </a>
-                        <a href="{{ buildUrl('userManager/delete')~'?id='~item.id }}">
+                        <a href="{{ buildUrl('newsManager/delete')~'?id='~item.id }}">
                             <span class="label label-danger">delete</span>
                         </a>
                     </td>
@@ -76,5 +72,5 @@
     {% include "common/pagenation.html" %}
 {% endblock %}
 {% block js %}
-    <script src="{{ buildStaticUrl("/js/user_manager/adduser.js") }}"></script>
+    <script src="{{ buildStaticUrl("/js/news_manager/addnews.js") }}"></script>
 {% endblock %}

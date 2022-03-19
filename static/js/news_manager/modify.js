@@ -66,7 +66,7 @@ var news_modify_ops = {
                     var callback = null;
                     if (res.code == 200) {
                         callback = function () {
-                            window.location.href = common_ops.buildUrl("/newsManager/");
+                            window.location.href = common_ops.buildUrl("/newsManager/newstext?id=" + id.toString());
                         }
                     }
                     common_ops.alert(res.msg, callback);

@@ -1,10 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Magz is a HTML5 & CSS3 magazine template is based on Bootstrap 3.">
+    <title>DNR</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/static/scripts/bootstrap/bootstrap.min.css">
+    <!-- IonIcons -->
+    <link rel="stylesheet" href="/static/scripts/ionicons/css/ionicons.min.css">
+    <!-- Toast -->
+    <link rel="stylesheet" href="/static/scripts/toast/jquery.toast.min.css">
+    <!-- OwlCarousel -->
+    <link rel="stylesheet" href="/static/scripts/owlcarousel/dist/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/scripts/owlcarousel/dist/assets/owl.theme.default.min.css">
+    <!-- Magnific Popup -->
+    <link rel="stylesheet" href="/static/scripts/magnific-popup/dist/magnific-popup.css">
+    <link rel="stylesheet" href="/static/scripts/sweetalert/dist/sweetalert.css">
+    <!-- Custom style -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    {#    <link rel="stylesheet" href="/static/css/skins/all.css">#}
+    <link rel="stylesheet" href="/static/css/demo.css">
+    {% block css %}{% endblock %}
+
 </head>
-<body>
-$END$
+<body class="skin-orange">
+<header class="primary">
+    <!-- Start nav -->
+    <nav class="menu">
+        <div class="container">
+            <div class="row"></div>
+            <div class="col-md-2">
+                <a href="{{ buildUrl("/") }}">
+                    <h3>DNR</h3>
+                </a>
+            </div>
+            <div class="col-md-offset-7 col-md-3 text-right">
+                <ul class="nav-icons">
+                    {% if current_user %}
+                        <li><a href="#">{{ current_user.login_name }}</a>
+                            <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dLabel">
+                                {% if current_user.power == 0 %}
+                                    <li><a href="{{ buildUrl('member/profile') }}">Your profile</a></li>
+                                    <li><a href="{{ buildUrl('member/reset') }}">Reset Password</a></li>
+                                {% else %}
+                                    <li><a href="{{ buildUrl('userManager/') }}">Manage User</a></li>
+                                    <li><a href="{{ buildUrl('newsManager/') }}">Manage News</a></li>
+                                {% endif %}
+                                <li><a href="{{ buildUrl('member/logout') }}">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End nav -->
+</header>
+<div style="min-height: 600px">
+    <section class="home">
+        <div class="container">
+            <form class="search" method="post" action="{{ buildUrl("newsManager/newstext") }}">
+                {% if data %}
+                    <textarea rows="23" name="text" cols="155" class="form-control" style="resize:none;">{{ data }}</textarea>
+                {% else %}
+                    <textarea rows="23" name="text" cols="155" class="form-control" style="resize:none;" placeholder="请输入新闻内容"></textarea>
+                {% endif %}
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" name="link" class="form-control" placeholder="插入图片地址">
+                </div>
+                <div class="col-md-6">
+                    <button type="submit" class="btn btn-primary btn-block">提交</button>
+                </div>
+            </div>
+            </form>
+        </div>
+    </section>
+</div>
+<footer class="footer">
+    <div style="text-align:center; margin-bottom: 45px">
+        My graduation project: news recommendation system based on deep learning.
+        <div>Follow Me: <a href="https://blog.csdn.net/qq_43510916?type=blog">CSDN_Blog</a> --
+            Gitee Location: <a href="https://gitee.com/ccql/dnr-bisher">Gitee_ccql</a>
+        </div>
+    </div>
+</footer>
+<script src="{{ buildStaticUrl("/js/jquery.js") }}"></script>
+<script src="{{ buildStaticUrl("/js/jquery.migrate.js") }}"></script>
+<script src="{{ buildStaticUrl("/scripts/bootstrap/bootstrap.min.js") }}"></script>
+<script>var $target_end = $(".best-of-the-week");</script>
+<script src="{{ buildStaticUrl("/scripts/jquery-number/jquery.number.min.js") }}"></script>
+<script src="{{ buildStaticUrl("/scripts/owlcarousel/dist/owl.carousel.min.js") }}"></script>
+<script src="{{ buildStaticUrl("/scripts/magnific-popup/dist/jquery.magnific-popup.min.js") }}"></script>
+<script src="{{ buildStaticUrl("/scripts/easescroll/jquery.easeScroll.js") }}"></script>
+<script src="{{ buildStaticUrl("/scripts/sweetalert/dist/sweetalert.min.js") }}"></script>
+<script src="{{ buildStaticUrl("/scripts/toast/jquery.toast.min.js") }}"></script>
+<script src="{{ buildStaticUrl("/js/e-magz.js") }}"></script>
+<script src="{{ buildStaticUrl('/layer/layer.js') }}"></script>
+<script src="{{ buildStaticUrl("/js/common.js") }}"></script>
+<script>
+</script>
+{% block js %}{% endblock %}
 </body>
 </html>

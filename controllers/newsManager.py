@@ -1,3 +1,5 @@
+import re
+
 from flask import Blueprint, request, redirect, g
 from application import db, app
 from common.libs.FLHelper.DateHelper import getCurrentTime
@@ -83,70 +85,69 @@ def search():
 def modify():
     if request.method == "GET":
         req = request.values
-        uid = int(req["id"]) if "id" in req and req["id"] else -1
+        nid = int(req["id"]) if "id" in req and req["id"] else -1
         page = 1
         if "p" in req and req["p"]:
             page = int(req["p"])
-        query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc()).all()
+        query = News.query.order_by(News.date.desc(), News.id.desc()).all()
         page_params = {
             "total_count": len(query),
             "page_size": 24,
             "page": page,
-            "url": "manager/modify?"
+            "url": "newsManager/modify?"
         }
         pages = iPageNation(page_params)
         # 0-23, 24-47, 48-71
         offset = (page - 1) * page_params["page_size"]
         limit = page * page_params["page_size"]
         # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
-        userl = query[offset:limit]
-        return ops_render("manager/modify.html", {"data": userl, "spid": uid, "pages": pages})
+        newsl = query[offset:limit]
+        return ops_render("newsManager/modify.html", {"data": newsl, "spid": nid, "pages": pages})
     req = request.values
-    nick_name = req["nick_name"] if "nick_name" in req else ""
-    login_name = req["login_name"] if "login_name" in req else ""
-    gender = req["gender"] if "gender" in req else ""
-    age = int(req["age"]) if "age" in req else -1
-    use = req["use"] if "use" in req else ""
-    occupation = req["occupation"] if "occupation" in req else ""
-    occ_list = ["Student", "Teacher", "Engineer", "Researcher", "Doctor", "Policeman", "Others"]
-    model_user = User.query.filter_by(login_name=login_name).first()
-    if nick_name is None or len(nick_name) < 1:
-        return ops_renderErrJSON(msg="请输入正确的昵称~~~")
+    id = req["id"] if "id" in req else ""
+    title = req["title"] if "title" in req else ""
+    genre = req["genre"] if "genre" in req else ""
+    authors = req["authors"] if "authors" in req else ""
+    date = req["date"] if "date" in req else ""
+    view = req["view"] if "view" in req else ""
+    genre_list = ["antip", "ent", "milite", "world", "tech", "finance"]
+    model_news = News.query.filter_by(id=id).first()
+    app.logger.warning(id)
+    app.logger.warning(title)
+    app.logger.warning(genre)
+    app.logger.warning(authors)
+    app.logger.warning(date)
+    app.logger.warning(view)
+    if title is None or len(title) < 1:
+        return ops_renderErrJSON(msg="请输入正确的新闻题目~~~")
 
-    if gender == "":
-        gender = model_user.gender
+    if genre == "":
+        genre = model_news.genres
 
-    if gender is None or len(gender) < 1 or (gender != "Female" and gender != "Male"):
-        return ops_renderErrJSON(msg="请选择正确的性别~~~")
-    if use == "":
-        if model_user.status == 1:
-            use = "using"
-        else:
-            use = "not using"
+    if genre is None or len(genre) < 1 or genre not in genre_list:
+        return ops_renderErrJSON(msg="请选择正确的新闻类别~~~")
 
-    if use is None or len(use) < 1 or (use != "using" and use != "not using"):
-        return ops_renderErrJSON(msg="请选择正确的用户状态~~~")
+    if authors is None or len(authors) < 1:
+        return ops_renderErrJSON(msg="请输入正确的新闻作者~~~")
 
-    if age > 100 or age < 0:
-        return ops_renderErrJSON(msg="请输入正确的年龄~~~")
+    # 匹配日期格式
+    ret = re.match("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}", date)
+    if ret ==  None:
+        return ops_renderErrJSON(msg="请输入正确的新闻发布时间，如：2022-03-18 17:12:00~~~")
 
-    if occupation == "":
-        occupation = model_user.occupation
+    if str.isdigit(view) == False or str == "":
+        return ops_renderErrJSON(msg="请输入正确的新闻阅读数~~~")
 
-    if occupation is None or len(occupation) < 1 or occupation not in occ_list:
-        return ops_renderErrJSON(msg="请选择正确的职业~~~")
-    if nick_name == model_user.nickname and gender == model_user.gender \
-       and True if (
-            (use == "using" and model_user.status == 1) or (use == "not using" and model_user.status == 0)) else False \
-                                                                                                                 and age == model_user.age and occupation == model_user.occupation:
+    if title == model_news.title and genre == model_news.genres and int(view) == model_news.view_counter\
+       and authors == model_news.authors and date == model_news.date:
         return ops_renderJSON(msg="信息未变动~~")
     else:
-        model_user.nickname = nick_name
-        model_user.gender = gender
-        model_user.age = age
-        model_user.occupation = occupation
-        model_user.status = 1 if use == "using" else 0
-        db.session.add(model_user)
+        model_news.title = title
+        model_news.genres = genre
+        model_news.view_counter = int(view)
+        model_news.authors = authors
+        model_news.date = date
+        db.session.add(model_news)
         db.session.commit()
         return ops_renderJSON(msg="信息修改成功~~")
 

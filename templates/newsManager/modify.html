@@ -1,0 +1,83 @@
+{% extends "common/nm_layout.html" %}
+{% block content %}
+    {% if data %}
+        <div class="modify-wrap">
+            <table class="table table-hover" style="text-align:center">
+                <thead style="text-align:center">
+                <tr>
+                    <th style="text-align:center">Title</th>
+                    <th style="text-align:center">Genre</th>
+                    <th style="text-align:center">Authors</th>
+                    <th style="text-align:center">Link</th>
+                    <th style="text-align:center">Date</th>
+                    <th style="text-align:center">View</th>
+                    <th style="text-align:center">Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in data %}
+                    <tr>
+                        {% if item.id == spid %}
+                            <p id="newsID" hidden="hidden"> {{ item.id }} </p>
+                            <td><input type="text" name="title" value="{{ item.title }}"></td>
+                            <td style="width:100px">
+                                <input type="text" name="genre" style="width:100px" list="genre-list"
+                                       placeholder="{{ item.genre }}">
+                                <datalist id="genre-list">
+                                    <option>antip</option>
+                                    <option>ent</option>
+                                    <option>milite</option>
+                                    <option>world</option>
+                                    <option>tech</option>
+                                    <option>finance</option>
+                                </datalist>
+                            </td>
+                            <td style="width:50px"><input type="text" style="width:50px" name="authors"
+                                                          value="{{ item.authors }}"></td>
+                            <td>
+                                <a href="{{ item.link }}">
+                                    点击转到数据来源
+                                </a>
+                            </td>
+                            <td><input type="text" name="date" value="{{ item.date }}"></td>
+                            <td><input type="text" name="view" value="{{ item.view_counter }}"></td>
+                            <td>
+                                <button class="label label-primary do-modify">
+                                    commit
+                                </button>
+                            </td>
+                        {% else %}
+                            <td>
+                                <p style="width: 200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
+                                    {{ item.title }}
+                                </p>
+                            </td>
+                            <td>{{ item.genres }}</td>
+                            <td>{{ item.authors }}</td>
+                            <td>
+                                <a href="{{ item.link }}">
+                                    点击转到数据来源
+                                </a>
+                            </td>
+                            <td>{{ item.date }}</td>
+                            <td>{{ item.view_counter }}</td>
+                            <td>
+                                <a href="{{ buildUrl('newsManager/modify')~'?id='~item.id }}">
+                                    <span class="label label-primary">modify</span>
+                                </a>
+                                <a href="{{ buildUrl('newsManager/delete')~'?id='~item.id }}">
+                                    <span class="label label-danger">delete</span>
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    {% include "common/pagenation.html" %}
+{% endblock %}
+{% block js %}
+    <script src="{{ buildStaticUrl("/js/news_manager/modify.js") }}"></script>
+{% endblock %}

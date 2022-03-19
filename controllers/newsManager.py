@@ -235,21 +235,19 @@ def newstext():
             text = News.query.filter_by(id=id).first().text
         else:
             text = ""
-        app.logger.warning("*********************newsText get***********************")
         return ops_render("newsText.html", {"data": text})
     else:
-        app.logger.warning("*********************newsText post***********************")
-        app.logger.warning(Tmodel_news.title)
-        app.logger.warning(Tmodel_news.genres)
-        app.logger.warning(Tmodel_news.authors)
-        app.logger.warning(Tmodel_news.date)
-        app.logger.warning(Tmodel_news.view_counter)
-        app.logger.warning(Tmodel_news.hash)
         f = request.form
         text = f["text"] if "text" in f else ""
         link = f["link"] if "link" in f else ""
+        if text is None or len(text) < 1:
+            return ops_renderErrJSON(msg="新闻文本为空")
+        if link is None or len(link) < 1:
+            return ops_renderErrJSON(msg="图片链接为空")
         Tmodel_news.text = text
         Tmodel_news.photo = link
+        print(text)
         db.session.add(Tmodel_news)
         db.session.commit()
-        return redirect(UrlManager.buildUrl("newsManager/"))
+        # return redirect(UrlManager.buildUrl("newsManager/"))
+        return ops_renderJSON(msg="新闻文本修改成功！")

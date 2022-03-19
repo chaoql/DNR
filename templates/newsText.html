@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="/static/css/style.css">
     {#    <link rel="stylesheet" href="/static/css/skins/all.css">#}
     <link rel="stylesheet" href="/static/css/demo.css">
-    {% block css %}{% endblock %}
 
 </head>
 <body class="skin-orange">
@@ -61,21 +60,23 @@
 <div style="min-height: 600px">
     <section class="home">
         <div class="container">
-            <form class="search" method="post" action="{{ buildUrl("newsManager/newstext") }}">
+            <form id="fm" method="post" action="{{ buildUrl("newsManager/newstext") }}">
                 {% if data %}
-                    <textarea rows="23" name="text" cols="155" class="form-control" style="resize:none;">{{ data }}</textarea>
+                    <textarea rows="23" name="text" cols="155" class="form-control"
+                              style="resize:none;">{{ data }}</textarea>
                 {% else %}
-                    <textarea rows="23" name="text" cols="155" class="form-control" style="resize:none;" placeholder="请输入新闻内容"></textarea>
+                    <textarea rows="23" name="text" cols="155" class="form-control" style="resize:none;"
+                              placeholder="请输入新闻内容"></textarea>
                 {% endif %}
-            <br>
-            <div class="row">
-                <div class="col-md-6">
-                    <input type="text" name="link" class="form-control" placeholder="插入图片地址">
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" name="link" class="form-control" placeholder="插入图片地址">
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-primary btn-block" id="fm_submit">提交</button>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <button type="submit" class="btn btn-primary btn-block">提交</button>
-                </div>
-            </div>
             </form>
         </div>
     </section>
@@ -102,7 +103,25 @@
 <script src="{{ buildStaticUrl('/layer/layer.js') }}"></script>
 <script src="{{ buildStaticUrl("/js/common.js") }}"></script>
 <script>
+    $(function () {
+        $("#fm_submit").click(function () {
+            $.ajax({
+                url: common_ops.buildUrl("/newsManager/newstext"),
+                type: "POST",
+                dataType: "json",
+                data: $("#fm").serialize(),
+                success: function (res) {
+                    var callback = null;
+                    if (res.code == 200) {
+                        callback = function () {
+                            window.location.href = common_ops.buildUrl("/newsManager/");
+                        }
+                    }
+                    common_ops.alert(res.msg, callback);
+                }
+            })
+        })
+    })
 </script>
-{% block js %}{% endblock %}
 </body>
 </html>

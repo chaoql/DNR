@@ -5,6 +5,7 @@ var member_add_ops = {
     },
     eventBind: function () {
         $(".do-add").click(function () { // 前面带"$"的就是jQuery语句
+            common_ops.alert("s")
             const btn_target = $(this);
             if (btn_target.hasClass("disabled")) { // 避免重复点击注册
                 common_ops.alert("正在处理！请勿重复点击~~");

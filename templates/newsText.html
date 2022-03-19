@@ -62,7 +62,7 @@
         <div class="container">
             <form id="fm" method="post" action="{{ buildUrl("newsManager/newstext") }}">
                 {% if data %}
-                    <textarea rows="23" name="text" cols="155" class="form-control"
+                    <textarea rows="23" name="text" cols="155" class="form-control" id="t1"
                               style="resize:none;">{{ data }}</textarea>
                 {% else %}
                     <textarea rows="23" name="text" cols="155" class="form-control" style="resize:none;"
@@ -71,7 +71,8 @@
                 <br>
                 <div class="row">
                     <div class="col-md-6">
-                        <input type="text" name="link" class="form-control" placeholder="插入图片地址">
+{#                        <input type="text" name="link" class="form-control" placeholder="插入图片地址">#}
+                        <input type="file" name="photo" id="t2" class="form-control"/>
                     </div>
                     <div class="col-md-6">
                         <button type="button" class="btn btn-primary btn-block" id="fm_submit">提交</button>
@@ -105,11 +106,16 @@
 <script>
     $(function () {
         $("#fm_submit").click(function () {
+            var myFormData = new FormData();
+            myFormData.append('text',$("#t1").val());
+            myFormData.append('photo',$('#t2')[0].files[0]);
             $.ajax({
                 url: common_ops.buildUrl("/newsManager/newstext"),
                 type: "POST",
-                dataType: "json",
-                data: $("#fm").serialize(),
+                {#dataType: "json",#}
+                contentType:false,  // 不用任何编码 因为formdata对象自带编码 django能够识别该对象
+                processData:false,  // 告诉浏览器不要处理我的数据 直接发就行
+                data: myFormData,
                 success: function (res) {
                     var callback = null;
                     if (res.code == 200) {

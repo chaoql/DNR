@@ -1,6 +1,5 @@
 import hashlib
 import re
-
 from flask import Blueprint, request, redirect, g
 from application import db, app
 from common.libs.FLHelper.DateHelper import getCurrentTime
@@ -239,13 +238,24 @@ def newstext():
     else:
         f = request.form
         text = f["text"] if "text" in f else ""
-        link = f["link"] if "link" in f else ""
+        # photo = f["photo"] if "photo" in f else ""
+        photo = request.files.get("photo")
+        print(text)
+        print('*************')
+        print(request.files)
+        print(photo)
+        end_name = photo.filename.rsplit('.')[-1]
+        if end_name not in ['JPG', 'jpg', 'png', 'gif', 'jpeg', 'bmp']:
+            return ops_renderErrJSON("图片格式错误，仅接受jpg, png, gif, jpeg, bmp格式的图片！")
+
         if text is None or len(text) < 1:
             return ops_renderErrJSON(msg="新闻文本为空")
-        if link is None or len(link) < 1:
+
+        if photo is None:
             return ops_renderErrJSON(msg="图片链接为空")
+        photo.save("E:/毕业设计/dnr-bisher/static/images/news/" + Tmodel_news.hash + ".jpg")
         Tmodel_news.text = text
-        Tmodel_news.photo = link
+        Tmodel_news.photo = photo
         print(text)
         db.session.add(Tmodel_news)
         db.session.commit()

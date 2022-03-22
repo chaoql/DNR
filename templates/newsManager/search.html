@@ -18,7 +18,9 @@
                 <tr>
                     <td>
                         <p style="width: 200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">
-                            {{ item.title }}
+                            <a href="{{ buildUrl("single")~"?id="~item.id }}">
+                                {{ item.title }}
+                            </a>
                         </p>
                     </td>
                     <td>{{ item.genres }}</td>

@@ -238,26 +238,22 @@ def newstext():
     else:
         f = request.form
         text = f["text"] if "text" in f else ""
-        # photo = f["photo"] if "photo" in f else ""
         photo = request.files.get("photo")
-        print(text)
-        print('*************')
-        print(request.files)
-        print(photo)
-        end_name = photo.filename.rsplit('.')[-1]
-        if end_name not in ['JPG', 'jpg', 'png', 'gif', 'jpeg', 'bmp']:
-            return ops_renderErrJSON("图片格式错误，仅接受jpg, png, gif, jpeg, bmp格式的图片！")
 
         if text is None or len(text) < 1:
             return ops_renderErrJSON(msg="新闻文本为空")
 
-        if photo is None:
+        if photo is None and Tmodel_news.photo is None:
             return ops_renderErrJSON(msg="图片链接为空")
-        photo.save("E:/毕业设计/dnr-bisher/static/images/news/" + Tmodel_news.hash + ".jpg")
+
+        if photo is not None:
+            end_name = photo.filename.rsplit('.')[-1]
+            if end_name not in ['JPG', 'jpg', 'png', 'gif', 'jpeg', 'bmp']:
+                return ops_renderErrJSON("图片格式错误，仅接受jpg, png, gif, jpeg, bmp格式的图片！")
+            photo.save("E:/毕业设计/dnr-bisher/static/images/news/" + Tmodel_news.hash + ".jpg")
+            Tmodel_news.photo = photo
+
         Tmodel_news.text = text
-        Tmodel_news.photo = photo
-        print(text)
         db.session.add(Tmodel_news)
         db.session.commit()
-        # return redirect(UrlManager.buildUrl("newsManager/"))
         return ops_renderJSON(msg="新闻文本修改成功！")

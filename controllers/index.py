@@ -1,5 +1,4 @@
 import random
-
 from flask import Blueprint, request, redirect, g
 from application import db
 from common.models.news import News
@@ -9,6 +8,7 @@ from common.libs.FLHelper.Helper import ops_render, iPageNation, ops_renderJSON
 from common.libs.FLHelper.UrlManager import UrlManager
 from sqlalchemy.sql.expression import func
 from application import app
+from sqlalchemy import or_
 
 index_page = Blueprint("index_page", __name__)
 
@@ -64,7 +64,13 @@ def search():
     req = request.values
     if search_str == "":
         search_str = req['search_str'] if 'search_str' in req else ""
-    model_news = News.query.filter(News.text.like("%" + search_str + "%")).all()
+    # model_news = News.query.filter(News.text.like("%" + search_str + "%")).all()
+    model_news = News.query.filter(or_(News.genres.like("%" + search_str + "%"),
+                                       News.title.like("%" + search_str + "%"),
+                                       News.date.like("%" + search_str + "%"),
+                                       News.text.like("%" + search_str + "%"),
+                                       News.view_counter.like(search_str))).order_by(News.date.desc(),
+                                                                                     News.id.desc()).all()
     count = len(model_news)
     page = 1
 

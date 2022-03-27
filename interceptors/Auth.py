@@ -23,7 +23,7 @@ def before_request():
                 or request.path.endswith("/member/forgot"):
             return
         if request.path == '/' or request.path == '/member/logout' or request.path == '/member/reset'\
-                or request.path == '/single' or request.path == '/rearch':
+                or request.path == '/single' or request.path == '/search':
             return redirect(UrlManager.buildUrl("member/login"))
     return
 

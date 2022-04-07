@@ -1,10 +1,16 @@
-import pickle
+from common.libs.FLHelper.Helper import load_obj
+from common.models.news import News
 
-
-def save_obj(obj, name):
-    with open('./' + name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-
-
-a = {"a": 10}
-save_obj(a, "a")
+News_list = []
+preView = load_obj("preView")
+print(preView)
+for item in preView:
+    for newsID in preView[item]:
+        model_news = News.query.filter_by(id=newsID).first()
+        # print(model_news)
+        News_list.append(model_news)
+# print(News_list)
+# print("-------------------------")
+# News_list = News.query.order_by(News.view_counter.desc(), News.id.desc()).all()
+# print(News_list)
+print(len(News_list))

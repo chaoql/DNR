@@ -29,38 +29,24 @@
 						</article>
 						<div class="line"><div>You May Also Like</div></div>
 						<div class="row">
-							<article class="article related col-md-6 col-sm-6 col-xs-12">
+                            {% for item in recommend_list %}
+                                <article class="article related col-md-6 col-sm-6 col-xs-12">
 								<div class="inner">
 									<figure>
-										<a href="#">
-											<img src="{{ pic_path ~ news.hash~ ".jpg" }}">
+										<a href="{{ buildUrl("single")~"?id="~item.id }}">
+											<img src="{{ pic_path ~ item.hash~ ".jpg" }}">
 										</a>
 									</figure>
 									<div class="padding">
-										<h2><a href="#">{{ news.title }}</a></h2>
+										<h2><a href="{{ buildUrl("single")~"?id="~item.id }}">{{ item.title }}</a></h2>
 										<div class="detail">
-											<div class="category"><a href="#">{{ news.genres }}</a></div>
-											<div class="time">{{ news.date }}</div>
+											<div class="category"><a href="#">{{ item.genres }}</a></div>
+											<div class="time">{{ item.date }}</div>
 										</div>
 									</div>
 								</div>
 							</article>
-							<article class="article related col-md-6 col-sm-6 col-xs-12">
-								<div class="inner">
-									<figure>
-										<a href="#">
-											<img src="{{ pic_path ~ news.hash~ ".jpg" }}">
-										</a>
-									</figure>
-									<div class="padding">
-										<h2><a href="#">{{ news.title }}</a></h2>
-										<div class="detail">
-											<div class="category"><a href="#">{{ news.genres }}</a></div>
-											<div class="time">{{ news.date }}</div>
-										</div>
-									</div>
-								</div>
-							</article>
+                            {% endfor %}
 						</div>
 					</div>
 				</div>

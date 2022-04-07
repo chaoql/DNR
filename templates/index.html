@@ -23,7 +23,9 @@
                                                     <div class="details">
                                                         <div class="category"><a
                                                                 href="category.html">{{ item.genres }}</a></div>
-                                                        <h1><a href="{{ buildUrl("single")~"?id="~item.id }}">{{ item.title }}</a></h1>
+                                                        <h1>
+                                                            <a href="{{ buildUrl("single")~"?id="~item.id }}">{{ item.title }}</a>
+                                                        </h1>
                                                         <div class="time">{{ item.date }}</div>
                                                     </div>
                                                 </article>
@@ -58,12 +60,14 @@
                                                 </div>
                                                 <div class="time">{{ item.date }}</div>
                                             </div>
-                                            <h1><a href="{{ buildUrl("single")~"?id="~item.id }}">{{ item.title }}</a></h1>
+                                            <h1><a href="{{ buildUrl("single")~"?id="~item.id }}">{{ item.title }}</a>
+                                            </h1>
                                             <p>
                                                 {{ (item.text | truncate_html(length=150)) ~ '...' }}
                                             </p>
                                             <footer>
-                                                <a class="btn btn-primary more" href="{{ buildUrl("single")~"?id="~item.id }}">
+                                                <a class="btn btn-primary more"
+                                                   href="{{ buildUrl("single")~"?id="~item.id }}">
                                                     <div>More</div>
                                                     <div><i class="ion-ios-arrow-thin-right"></i></div>
                                                 </a>
@@ -76,7 +80,7 @@
                     {% endif %}
                 </div>
             </div>
-        {% include "common/pagenation.html" %}
+            {% include "common/pagenation.html" %}
         </div>
     </section>
 

@@ -6,23 +6,36 @@
             <ul class="pagination pull-right">
                 {% if pages.is_prev == 1 %}
                     <li>
-                        <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current - 1)|string)) }}"
-                           aria-label="Previous">
+                        {% if str %}
+                            <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current - 1)|string) ~ '&search_str=' ~ str) }}" aria-label="Previous">
+                        {% else %}
+                            <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current - 1)|string)) }}" aria-label="Previous">
+                        {% endif %}
                             <span aria-hidden="true"><i class="ion-ios-arrow-left"></i></span>
                         </a>
                     </li>
                 {% endif %}
                 {% for idx in pages.range %}
-                    {% if (idx - pages.current < 3 and idx - pages.current > -3) or idx == pages.total_pages %}
-                        <li {% if pages.current == idx %} class="active" {% endif %}><a
-                                href="{{ buildUrl(pages.url ~ '&p=' ~ (idx|string)) }}">{{ idx }}</a>
-                            {% elif idx - pages.current == 3 or pages.current - idx == 3 %}
+                    {% if (idx - pages.current < 3 and idx - pages.current > -3) or idx == pages.total_pages or idx == 1 %}
+                        <li {% if pages.current == idx %} class="active" {% endif %}>
+                            {% if str %}
+                                <a href="{{ buildUrl(pages.url ~ '&p=' ~ (idx|string) ~ '&search_str=' ~ str) }}">
+                            {% else %}
+                                <a href="{{ buildUrl(pages.url ~ '&p=' ~ (idx|string) ) }}">
+                            {% endif %}
+                                {{ idx }}
+                            </a>
+                    {% elif idx - pages.current == 3 or pages.current - idx == 3 %}
                         <li><a href="#">...</a></li>
                     {% endif %}
                 {% endfor %}
                 {% if pages.is_next == 1 %}
                     <li>
-                        <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current + 1)|string)) }}" aria-label="Next">
+                        {% if str %}
+                            <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current + 1)|string) ~ '&search_str=' ~ str) }}" aria-label="Next">
+                        {% else %}
+                            <a href="{{ buildUrl(pages.url ~ '&p=' ~ ((pages.current + 1)|string)) }}" aria-label="Next">
+                        {% endif %}
                             <span aria-hidden="true"><i class="ion-ios-arrow-right"></i></span>
                         </a>
                     </li>

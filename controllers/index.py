@@ -20,10 +20,13 @@ def index():
     req = request.values
     if "p" in req and req["p"]:
         page = int(req["p"])
-    News_list = News.query.order_by(News.view_counter.desc(), News.id.desc()).all()
+    News_list = []
+    preView = load_obj("preView")
+    for newsID in preView[g.current_user.id]:
+        News_list.append(News.query.filter_by(id=newsID).first())
+    # News_list = News.query.order_by(News.view_counter.desc(), News.id.desc()).all()
     Hot_list = News_list[0:5]
     Nomal_list = News_list[5:]
-    random.shuffle(Nomal_list)
     page_params = {
         "total_count": len(Nomal_list),
         "page_size": 10,
@@ -34,6 +37,7 @@ def index():
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
     list_news = Nomal_list[offset:limit]
+    print(list_news)
     return ops_render("index.html", {"newsL": list_news, "swiper": Hot_list, "pages": pages,
                                      "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
 
@@ -54,7 +58,8 @@ def single():
     db.session.add(model_news)
     db.session.add(model_view)
     db.session.commit()
-    return ops_render("single.html", {'news': model_news,
+    recommend_list = News.query.filter_by(genres=model_news.genres).order_by(func.rand()).limit(2)  # 随机推荐
+    return ops_render("single.html", {'news': model_news,"recommend_list": recommend_list,
                                       "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
 
 

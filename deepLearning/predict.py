@@ -1,26 +1,31 @@
 import glob
+import warnings
+import jieba
 import joblib
 import numpy as np
 import pandas as pd
-from keras.utils.np_utils import to_categorical
-from tqdm import tqdm
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
-import jieba
+from keras.utils.np_utils import to_categorical
+from tqdm import tqdm
+
+warnings.filterwarnings('ignore')
 tqdm.pandas()
-model = load_model("textcnn.hdf5")
-tokenizer = joblib.load("tokenizer.joblib")
+
+model = load_model("deepLearning/textcnn.hdf5")
+tokenizer = joblib.load("deepLearning/tokenizer.joblib")
 
 d = {}
-for i in glob.glob("*"):
+for i in glob.glob("deepLearning/*"):
     if "joblib" in i and "token" not in i:
-        d[i[:-7]] = joblib.load(i)
+        d[i[13:-7]] = joblib.load(i)
 
 age = 21
 genres = "antip"
 userid = 3
 gender = "Female"
 numcate = [len(d["genres"].keys()), len(d["userid"].keys()), len(d["gender"].keys()), len(d["occupation"].keys())]
+
 
 def get_float_input(age, viewcount, genres="antip", userid=3, gender="Female", occupation="Student"):
     try:
@@ -72,4 +77,4 @@ def text_pre(text, age, viewcount, genres="antip", userid=3, gender="Female", oc
     return model.predict([train_pad, dffloat])[0][0]
 
 
-print(text_pre("随变测试", 21, 99, "1122", 3, "Female", "Student"))
+# print(text_pre("随变测试", 21, 99, "1122", 3, "Female", "Student"))

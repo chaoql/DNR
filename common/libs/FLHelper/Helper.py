@@ -1,5 +1,17 @@
+import pickle
+
 from flask import jsonify, g, render_template
 import math
+
+
+def load_obj(name):
+    with open('./' + name + '.pkl', 'rb') as f:
+        return pickle.load(f)
+
+
+def save_obj(obj, name):
+    with open('./' + name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
 def ops_render(template, context=None):

@@ -13,7 +13,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from sqlalchemy import create_engine
-from tensorflow.keras.models import load_model
+from keras.models import load_model
 from keras.utils.np_utils import to_categorical
 from tqdm import tqdm
 np.random.seed(24)

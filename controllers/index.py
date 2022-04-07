@@ -1,3 +1,4 @@
+import pickle
 import random
 from flask import Blueprint, request, redirect, g
 from application import db
@@ -9,7 +10,7 @@ from common.libs.FLHelper.UrlManager import UrlManager
 from sqlalchemy.sql.expression import func
 from application import app
 from sqlalchemy import or_
-
+from common.libs.FLHelper.Helper import load_obj
 index_page = Blueprint("index_page", __name__)
 
 

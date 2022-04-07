@@ -14,7 +14,7 @@ from application import app, db
 from common.libs.FLHelper.DateHelper import getCurrentTime
 
 """
-python manager.py runjob -m news
+python manager.py runjob -m getNews
 """
 
 

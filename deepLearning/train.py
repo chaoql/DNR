@@ -51,7 +51,7 @@ userfulcol = ["genres", "userid", "title", "text", "view_count", "gender", "age"
 # 因为userid和nickname都是一个人，所以用userid一个就好
 dfnews2 = dfnews2[userfulcol]
 
-# 处理除文本输入端的数据
+# 处理非文本数据
 othercol = ["genres", "userid", "gender", "age", "occupation", "view_count"]
 dfnews3 = dfnews2[othercol]
 catefea = ["genres", "userid", "gender", "occupation"]
@@ -74,19 +74,19 @@ dfnews2["textall"] = dfnews2["textall"].progress_apply(lambda x: list(jieba.cut(
 
 # w2v
 w2v_model = gensim.models.Word2Vec(list(dfnews2["textall"]), size=128, iter=10, min_count=0)
-word_vectors = w2v_model.wv
+word_vectors = w2v_model.wv  # 训练之后的词向量
 dfnews2["len"] = dfnews2["textall"].apply(lambda x: len(x))
 
 # 文本转向量
 x_train = list(dfnews2["textall"])
-tokenizer = Tokenizer()
-tokenizer.fit_on_texts(x_train)  # 统计每个词对应的数字，以便于将文本转化成向量
+tokenizer = Tokenizer()  # 分词器
+tokenizer.fit_on_texts(x_train)  # 统计每个词对应的数字，生成token词典，以便于将文本转化成向量
 train_sequence = tokenizer.texts_to_sequences(x_train)  # 将所有的文本转化成向量
 MAX_SEQUENCE_LENGTH = 512  # 最大长度
 EMBEDDING_DIM = 128  # 向量维度
 y_train = dfnews2["viewcount"]
 y_train = y_train.astype(float)
-word_index = tokenizer.word_index
+word_index = tokenizer.word_index  # 一个dict，保存所有word对应的编号id，从1开始
 print('Found %s unique tokens.' % len(word_index))
 train_pad = pad_sequences(train_sequence, maxlen=MAX_SEQUENCE_LENGTH)  # 将每条文本按照最大长度补0
 
@@ -103,9 +103,6 @@ for word, i in word_index.items():
     else:
         not_in_model += 1
         not_words.append(word)
-
-embed = Embedding(len(word_index) + 1, EMBEDDING_DIM, weights=[embedding_matrix], input_length=MAX_SEQUENCE_LENGTH,
-                  trainable=True)  # 定义一个词嵌入层,将句子转化成对应的向量
 
 # 切分数据集
 index = np.random.permutation(range(train_pad.shape[0]))

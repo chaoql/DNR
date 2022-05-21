@@ -98,12 +98,9 @@ def modify():
             "url": "newsManager/modify?"
         }
         pages = iPageNation(page_params)
-        # 0-23, 24-47, 48-71
         offset = (page - 1) * page_params["page_size"]
         limit = page * page_params["page_size"]
-        # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
         newsl = query[offset:limit]
-        app.logger.warning("*********************newsText get***********************")
         return ops_render("newsManager/modify.html", {"data": newsl, "spid": nid, "pages": pages})
     req = request.values
     id = req["id"] if "id" in req else ""
@@ -135,13 +132,6 @@ def modify():
     if str.isdigit(view) == False or str == "":
         return ops_renderErrJSON(msg="请输入正确的新闻阅读数~~~")
 
-    app.logger.warning("*********************modify post***********************")
-    app.logger.warning(title)
-    app.logger.warning(genre)
-    app.logger.warning(authors)
-    app.logger.warning(date)
-    app.logger.warning(view)
-    app.logger.warning(Tmodel_news.hash)
     if title == Tmodel_news.title and genre == Tmodel_news.genres and int(view) == Tmodel_news.view_counter \
             and authors == Tmodel_news.authors and date == Tmodel_news.date:
         return ops_renderJSON(msg="信息未变动~~")
@@ -151,8 +141,6 @@ def modify():
         Tmodel_news.view_counter = int(view)
         Tmodel_news.authors = authors
         Tmodel_news.date = date
-        # db.session.add(model_news)
-        # db.session.commit()
         return ops_renderJSON(msg="信息修改成功~~")
 
 
@@ -171,7 +159,6 @@ def add():
             "url": "newsManager/add?"
         }
         pages = iPageNation(page_params)
-        # 0-23, 24-47, 48-71
         offset = (page - 1) * page_params["page_size"]
         limit = page * page_params["page_size"]
         newsl = query[offset:limit]
@@ -185,11 +172,6 @@ def add():
     view = req["view"] if "view" in req else ""
     link = req["link"] if "link" in req else ""
     genre_list = ["antip", "ent", "milite", "world", "tech", "finance"]
-    app.logger.warning(title)
-    app.logger.warning(genre)
-    app.logger.warning(authors)
-    app.logger.warning(date)
-    app.logger.warning(view)
     if title is None or len(title) < 1:
         return ops_renderErrJSON(msg="请输入正确的新闻题目~~~")
 
@@ -212,7 +194,7 @@ def add():
     if str.isdigit(view) == False or str == "":
         return ops_renderErrJSON(msg="请输入正确的新闻阅读数~~~")
 
-    # model_news = News()
+
     Tmodel_news.title = title
     Tmodel_news.link = link
     Tmodel_news.genres = genre
@@ -220,8 +202,6 @@ def add():
     Tmodel_news.authors = authors
     Tmodel_news.date = date
     Tmodel_news.hash = hashlib.md5(link.encode("utf-8")).hexdigest()
-    # db.session.add(model_news)
-    # db.session.commit()
     return ops_renderJSON(msg="新闻添加成功(1/2)~~~")
 
 

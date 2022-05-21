@@ -94,10 +94,8 @@ def modify():
             "url": "userManager/modify?"
         }
         pages = iPageNation(page_params)
-        # 0-23, 24-47, 48-71
         offset = (page - 1) * page_params["page_size"]
         limit = page * page_params["page_size"]
-        # query = User.query.filter_by(power=0).order_by(User.created_time.desc(), User.id.desc())
         userl = query[offset:limit]
         return ops_render("userManager/modify.html", {"data": userl, "spid": uid, "pages": pages})
     req = request.values
@@ -135,9 +133,10 @@ def modify():
     if occupation is None or len(occupation) < 1 or occupation not in occ_list:
         return ops_renderErrJSON(msg="请选择正确的职业~~~")
     if nick_name == model_user.nickname and gender == model_user.gender \
-       and True if (
-            (use == "using" and model_user.status == 1) or (use == "not using" and model_user.status == 0)) else False \
-                                                                                                                 and age == model_user.age and occupation == model_user.occupation:
+            and (True if (
+            (use == "using" and model_user.status == 1) or (
+            use == "not using" and model_user.status == 0)) else False) and age == model_user.age \
+            and occupation == model_user.occupation:
         return ops_renderJSON(msg="信息未变动~~")
     else:
         model_user.nickname = nick_name
@@ -165,7 +164,6 @@ def add():
             "url": "userManager/add?"
         }
         pages = iPageNation(page_params)
-        # 0-23, 24-47, 48-71
         offset = (page - 1) * page_params["page_size"]
         limit = page * page_params["page_size"]
         userl = query[offset:limit]

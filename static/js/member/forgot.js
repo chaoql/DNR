@@ -10,9 +10,9 @@ var member_forgot_ops = {
                 common_ops.alert("正在处理！请勿重复点击~~");
                 return;
             }
-            const email = $(".forgot-wrap input[name=email]").val();
-            if (email === undefined || email.length < 1) {
-                common_ops.alert("请选择正确的邮箱~~");
+            const name = $(".forgot-wrap input[name=name]").val();
+            if (name === undefined || name.length < 1) {
+                common_ops.alert("请选择正确的用户名~~");
                 return;
             }
             btn_target.addClass("disabled");
@@ -22,7 +22,7 @@ var member_forgot_ops = {
                 url: common_ops.buildUrl("/member/forgot"),
                 type: "POST",
                 data: {
-                    email: email,
+                    name: name,
                 },
                 dataType: 'json', // 返回值格式
                 success: function (res) { // 请求成功后执行的代码

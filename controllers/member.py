@@ -49,8 +49,6 @@ def reg():
     reg_model_user.login_pwd = UserService.genePwd(login_pwd, reg_model_user.login_salt)
     reg_model_user.created_time = reg_model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
     reg_model_user.status = 1
-    # db.session.add(model_user)
-    # db.session.commit()
     response = make_response(ops_renderJSON(msg="注册成功(1/2),请继续完善信息~~~"))
     return response
 
@@ -95,11 +93,11 @@ def forgot():
     if request.method == "GET":
         return ops_render("/member/forgot.html")
     req = request.values
-    email = req["email"] if "email" in req else ""
-    if email is None or len(email) < 1:
-        return ops_renderErrJSON(msg="请输入正确的邮箱~~")
-    model_user = User.query.filter_by(email=email).first()
-    emails = [email]
+    name = req["name"] if "name" in req else ""
+    if name is None or len(name) < 1:
+        return ops_renderErrJSON(msg="请输入正确的用户名~~")
+    model_user = User.query.filter_by(login_name=name).first()
+    emails = [model_user.email]
     if model_user:
         send_reset_pwd_email(model_user, re=emails)
     else:
@@ -116,11 +114,6 @@ def f_reset():
     new_pwd = req["new_pwd"] if "new_pwd" in req else ""
     new_pwd2 = req["new_pwd2"] if "new_pwd2" in req else ""
 
-    app.logger.warning("===============f_reset==============")
-    app.logger.warning(req)
-    app.logger.warning(model_user)
-    app.logger.warning("------------------------------------")
-    # 因为前端可能会被穿透，所以后端要再验证一遍
     if new_pwd is None or len(new_pwd) < 6:
         return ops_renderErrJSON(msg="请输入正确的新登陆密码，并且不能小于6个字符~~")
     if new_pwd2 is None or len(new_pwd2) < 6 or new_pwd != new_pwd2:
@@ -226,7 +219,6 @@ def profile():
     else:
         model_user = User.query.filter_by(id=g.current_user.id).first()
         model_user.nickname = nick_name
-        # model_user.login_name = login_name
         model_user.gender = gender
         model_user.age = age
         model_user.occupation = occupation

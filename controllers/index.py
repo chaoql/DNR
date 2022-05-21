@@ -11,6 +11,8 @@ from sqlalchemy.sql.expression import func
 from application import app
 from sqlalchemy import or_
 from common.libs.FLHelper.Helper import load_obj
+from deepLearning.predict import text_pre
+
 index_page = Blueprint("index_page", __name__)
 
 
@@ -21,10 +23,15 @@ def index():
     if "p" in req and req["p"]:
         page = int(req["p"])
     News_list = []
-    preView = load_obj("preView")
-    for newsID in preView[g.current_user.id]:
+    preView = {}
+    model_news = News.query.all()
+    for news in model_news:
+        rate = text_pre(news.title + news.text, g.current_user.age, news.view_counter, news.genres, g.current_user.id,
+                        g.current_user.gender, g.current_user.occupation)
+        preView[news.id] = rate
+    preView_order = dict(sorted(preView.items(), key=lambda x: x[1], reverse=True))
+    for newsID in preView:
         News_list.append(News.query.filter_by(id=newsID).first())
-    # News_list = News.query.order_by(News.view_counter.desc(), News.id.desc()).all()
     Hot_list = News_list[0:5]
     Nomal_list = News_list[5:]
     page_params = {
@@ -37,7 +44,6 @@ def index():
     offset = (page - 1) * page_params["page_size"]
     limit = page * page_params["page_size"]
     list_news = Nomal_list[offset:limit]
-    print(list_news)
     return ops_render("index.html", {"newsL": list_news, "swiper": Hot_list, "pages": pages,
                                      "pic_path": app.config['DOMAIN']['www'] + "static/images/news/"})
 
@@ -70,7 +76,6 @@ def search():
     req = request.values
     if search_str == "":
         search_str = req['search_str'] if 'search_str' in req else ""
-    # model_news = News.query.filter(News.text.like("%" + search_str + "%")).all()
     model_news = News.query.filter(or_(News.genres.like("%" + search_str + "%"),
                                        News.title.like("%" + search_str + "%"),
                                        News.date.like("%" + search_str + "%"),

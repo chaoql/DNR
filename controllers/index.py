@@ -14,7 +14,7 @@ from common.libs.FLHelper.Helper import load_obj
 from deepLearning.predict import text_pre
 
 index_page = Blueprint("index_page", __name__)
-
+preView = {}
 
 @index_page.route("/")
 def index():
@@ -23,13 +23,14 @@ def index():
     if "p" in req and req["p"]:
         page = int(req["p"])
     News_list = []
-    preView = {}
-    model_news = News.query.all()
-    for news in model_news:
-        rate = text_pre(news.title + news.text, g.current_user.age, news.view_counter, news.genres, g.current_user.id,
-                        g.current_user.gender, g.current_user.occupation)
-        preView[news.id] = rate
-    preView_order = dict(sorted(preView.items(), key=lambda x: x[1], reverse=True))
+    if preView is {} or not preView:
+        print("1")
+        model_news = News.query.all()
+        for news in model_news:
+            rate = text_pre(news.title + news.text, g.current_user.age, news.view_counter, news.genres, g.current_user.id,
+                            g.current_user.gender, g.current_user.occupation)
+            preView[news.id] = rate
+        preView_order = dict(sorted(preView.items(), key=lambda x: x[1], reverse=True))
     for newsID in preView:
         News_list.append(News.query.filter_by(id=newsID).first())
     Hot_list = News_list[0:5]

@@ -3,9 +3,11 @@ from flask import Blueprint, request, make_response, redirect, g
 from common.libs.FLHelper.Helper import ops_renderJSON, ops_renderErrJSON, ops_render
 from common.libs.FLHelper.UrlManager import UrlManager
 from common.libs.FLHelper.DateHelper import getCurrentTime
+from common.models.news import News
 from common.models.user import User
 from common.libs.FLHelper.UserService import UserService
 from common.libs.FLHelper.MailService import send_reset_pwd_email
+from deepLearning.predict import text_pre
 
 member_page = Blueprint("member_page", __name__)
 
@@ -78,6 +80,13 @@ def login():
     response.set_cookie(key=app.config["AUTH_COOKIE_NAME"],
                         value="%s#%s" % (UserService.geneAuthCode(user_info), user_info.id),
                         max_age=60 * 60 * 24 * 120)
+    g.preView = {}
+    model_news = News.query.all()
+    for news in model_news:
+        rate = text_pre(news.title + news.text, user_info.age, news.view_counter, news.genres, user_info.id,
+                        user_info.gender, user_info.occupation)
+        g.preView[news.id] = rate
+    preView_order = dict(sorted(g.preView.items(), key=lambda x: x[1], reverse=True))
     return response
 
 

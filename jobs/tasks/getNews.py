@@ -22,9 +22,9 @@ class JobTask:
     def __init__(self):
         self.date = getCurrentTime(frm="%Y%m%d")
         self.source = "puffpost"
-        self.urls = ["https://new.qq.com/ch/antip/", "https://new.qq.com/ch/ent/", "https://new.qq.com/ch/milite/",
+        self.urls = ["https://new.qq.com/ch/ent/", "https://new.qq.com/ch/milite/",
                      "https://new.qq.com/ch/world/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/ "]
-        self.a_urls = ["https://new.qq.com/ch/antip/", "https://new.qq.com/ch/ent/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/"]
+        self.a_urls = ["https://new.qq.com/ch/ent/", "https://new.qq.com/ch/tech/", "https://new.qq.com/ch/finance/"]
         self.b_urls = ["https://new.qq.com/ch/milite/", "https://new.qq.com/ch/world/"]
 
     def run(self, params):
@@ -57,6 +57,7 @@ class JobTask:
         soup = BeautifulSoup(str(content), "html.parser")
         try:
             tmp_text = soup.select("div.content-article p.one-p")
+            print(tmp_text)
             item["text"] = ""
             for text in tmp_text:
                 if text.select("img"):
@@ -96,10 +97,10 @@ class JobTask:
         url_info = urlparse(url=url)
         url_domain = url_info[0] + "://" + url_info[1]
         tmp_soup = BeautifulSoup(str(content), "html.parser")
-        if genres == "a":
-            tmp_list = tmp_soup.select("div#List div.channel_mod ul#dataFull.list li.item.cf.itme-ls")
-        else:
-            tmp_list = tmp_soup.select("div#List div.hotnews ul#hot_scroll.list li.item.cf.itme-ls")
+        # if genres == "a":
+        tmp_list = tmp_soup.select("div#List div.channel_new ul#dataFull.list li.item.cf.itme-ls")
+        # else:
+        #     tmp_list = tmp_soup.select("div#List div.hotnews ul#hot_scroll.list li.item.cf.itme-ls")
         for item in tmp_list:
             try:
                 tmp_genre = url.split("/")[-2]
@@ -150,7 +151,7 @@ class JobTask:
             return None
 
     def download_pics(self, item):
-        f = open('E:/毕业设计/dnr-bisher/static/images/news/' + str(item["hash"]) + ".jpg", 'wb')
+        f = open('E:/个人修行/毕业设计/dnr-bisher/static/images/news/' + str(item["hash"]) + ".jpg", 'wb')
         f.write((urllib.request.urlopen(item["photo"])).read())
         print("图片下载：" + item["photo"])
         f.close()

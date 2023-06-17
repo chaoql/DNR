@@ -17,7 +17,7 @@ class runjob(Command):
 
     def run(self, *args, **kwargs):
         # print(sys.argv)  # ['manager.py', 'runjob']
-        app.logger.info("sssssssssssss")
+        # app.logger.info("sssssssssssss")
         args = sys.argv[2:]
         parser = argparse.ArgumentParser(add_help=True)  # 解析器
         parser.add_argument("-m", "--name", dest="name", metavar="name", help="指定job名", required=True)

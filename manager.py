@@ -3,6 +3,8 @@ from application import app, db, manager
 from flask_script import Server, Command   # from ._compat import text_type 改成 from flask_script._compat import text_type
 import traceback
 import sys
+
+from common.libs.FLHelper.Helper import first_use, db_exist
 from jobs.launcher import runjob
 from www import *
 import flask
@@ -16,6 +18,8 @@ manager.add_command("runjob", runjob)
 
 
 def main():
+    db_exist()
+    first_use()
     manager.run()
 
 

@@ -1,25 +1,47 @@
-# DNR-基于深度学习的新闻推荐系统设计与实现
+# DNR - A News Recommendation System Based on Deep Learning
+![Static Badge](https://img.shields.io/badge/python-3.6-orange?style=flat-square) ![Static Badge](https://img.shields.io/badge/%20flask-2.0.3-orange?style=flat-square) ![Static Badge](https://img.shields.io/badge/%20Neural%20Network-TextCNN-orange?style=flat-square)
 
-#### 介绍
-近年来，随着人们生活水平的提高和新闻行业的快速发展，大量冗余新闻信息充斥在人们眼前，给线上浏览新闻的用户造成了很多烦恼，新闻推荐系统则可以根据用户的兴趣爱好和历史新闻查看记录进行个性化推荐，在节省用户时间的同时，极大提高了新闻查看效率和新闻查看体验。为此，本文基于深度学习技术设计与实现了一个新闻推荐系统，主要工作包括：
-1.数据采集及预处理：首先，使用Selenium爬虫技术获取腾讯网新闻数据作为本项目的新闻数据库，其中包含新闻的发布日期、标题和内容等各项关键信息；其次，将结构化数据中的类别信息转化为数值并进行one-hot编码，将非结构化文本数据进行分词后生成索引字典，将文本根据分词索引结果转化为索引文本，进行词嵌入处理。
-2.深度学习模型训练：神经网络的设计中采用文本卷积神经网络，对用户信息和部分新闻信息等结构化数据和文本类型的非结构化数据进行学习，回归预测各用户对当前各新闻的点击量数据，预测误差mse为0.524，将新闻根据各用户的预测点击量数据进行排序，实现新闻推荐功能。
-3.新闻推荐系统开发：使用Flask框架进行Web开发。首先对用户和管理员两类系统使用者进行需求分析，并对系统数据流进行分析确保开发过程中整个系统的数据流向清晰明了；随后进行系统设计（架构设计、功能设计、数据库设计和界面设计），架构采用经典三层架构，系统开发环境使用PyCharm，系统开发语言选择Python，并在系统前端使用Jinja2框架，功能设计中根据需求分析结果共设计数十项功能，数据库设计过程中经历概念模型、逻辑模型和物理模型三个阶段完成设计；随后进行系统实现，完成新闻推荐系统开发。
+This is my graduation project, and I know there are some issues with it, but I still hope it can help you.
 
-#### 软件架构
-Flask
+## Quick start
 
-#### 安装教程
+This is how you set up an development instance of DNR:
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- Create a virtual environment
 
+  ```
+  conda create --name <env-name> python=3.6
+  ```
 
-#### 参与贡献
+- Enter this virtual environment
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+  ```
+  conda activate <env-name>
+  ```
+
+- Install the requirements.txt
+
+  ```
+  pip install requirements.txt
+  ```
+
+- Run server
+
+  > Guys, if you don't connect to MySQL database, you can't login it. Maybe you should see the next chapter which is Database Setting.
+
+  ```
+  python manager.py runserver
+  ```
+
+## Database Setting
+
+When you first use the system, you should properly configure MySQL related configurations to ensure that the code can connect to the database. In the path which is `config/local_setting.py`, you should modify `SQLALCHEMY_DATABASE_URI`. Then run the server, your username is root and password is 123456. 
+
+## License
+
+This project is licensed under the [GPL-2.0 license](https://github.com/chaoql/DNR/blob/main/LICENSE).
+
+## Links
+
+[my blog]: https://blog.csdn.net/qq_43510916?type=blog
 

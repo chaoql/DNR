@@ -3,6 +3,39 @@ import pickle
 from flask import jsonify, g, render_template
 import math
 
+from application import db
+from common.libs.FLHelper.DateHelper import getCurrentTime
+from common.libs.FLHelper.UserService import UserService
+from common.models.user import User
+
+from sqlalchemy_utils import database_exists, create_database
+
+from config.local_setting import SQLALCHEMY_DATABASE_URI
+
+
+def db_exist():
+    if database_exists(SQLALCHEMY_DATABASE_URI):
+        pass
+    else:
+        create_database(SQLALCHEMY_DATABASE_URI)
+        db.create_all()
+
+
+def first_use():
+    model_user = User.query.filter_by(login_name="root").first()
+    if not model_user:
+        model_user = User()
+        model_user.nickname = "root"
+        model_user.login_name = "root"
+        model_user.login_salt = UserService.geneSalt(8)
+        model_user.login_pwd = UserService.genePwd("123456", model_user.login_salt)
+        model_user.created_time = model_user.updated_time = getCurrentTime(frm="%Y-%m-%d %H:%M:%S")
+        model_user.status = 1
+        model_user.power = 1
+        model_user.email = "youremail@email.com"
+        db.session.add(model_user)
+        db.session.commit()
+
 
 def load_obj(name):
     with open('./' + name + '.pkl', 'rb') as f:
@@ -62,6 +95,7 @@ def iPageNation(params):
         "url": params["url"],
     }
     return pages
+
 
 import re
 
